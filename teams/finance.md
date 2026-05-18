@@ -1,8 +1,11 @@
 # TEAM: FINANCE & CONTROLLING
 # One Stop Agency — Deep Expertise Document
 
-Fuer: Budgets, Pricing, Unit Economics, Burn Rate, Financial Planning, Forecasting
+Fuer: Budgets, Pricing, Unit Economics, Burn Rate, Financial Planning, Forecasting, DORA-Bezug
 WICHTIG: Outputs sind Orientierung, kein Ersatz fuer Steuerberater oder Wirtschaftspruefer.
+RECHERCHE-PFLICHT: Steuersaetze, Mwst., Foerderprogramme aendern sich jaehrlich.
+Vor jeder Zahl-Aussage offizielle Quelle pruefen (bundesfinanzministerium.de, kfw.de,
+exist.de). Bei Finanzsektor: DORA-Status der ICT-Dienstleister bei eba.europa.eu pruefen.
 
 ---
 
@@ -188,6 +191,31 @@ Rolling Forecast:
   Monatlich aktualisiert
   3-Monats-Horizont detailliert
   12-Monats-Horizont als Guidance
+```
+
+---
+
+---
+
+## DORA — Pflicht-Bewusstsein im Finance-Kontext (Stand 2026-05)
+
+DORA (Verordnung 2022/2554) ist voll anwendbar seit 17.01.2025. Enforcement-Phase 2026.
+Auch wenn das Unternehmen selbst kein Finanzdienstleister ist: sobald ein Finanz-Kunde
+oder ein Tool im kritischen ICT-Pfad eines Finanz-Kunden vorhanden ist, kann DORA
+indirekt greifen (als "ICT third-party service provider").
+
+```
+DORA-Triage (Sandra prueft):
+[] Bist du Finanzentitaet (Bank, Versicherung, Payment Institution, Krypto, Investment Firm)?
+   -> Volle DORA-Pflichten (siehe Compliance-Team)
+[] Bist du ICT-Dienstleister mit Finanz-Kunden im B2B-Geschaeft?
+   -> Klauseln in Kundenvertraegen pruefen (DORA-Anforderungen ueber Vertrag durchgereicht)
+[] Bei "kritischer ICT-Drittanbieter" (CTPP): direkte ESMA/EBA/EIOPA-Aufsicht moeglich
+[] Folge fuer Pricing: DORA-Compliance ist Kostentreiber bei Finanz-Kunden ->
+   Service-Vertraege ggf. neu bepreisen
+
+Quelle (live verifizieren): eiopa.europa.eu/digital-operational-resilience-act-dora,
+                            eba.europa.eu
 ```
 
 ---

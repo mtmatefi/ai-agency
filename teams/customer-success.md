@@ -2,6 +2,9 @@
 # One Stop Agency — Deep Expertise Document
 
 Fuer: Onboarding, Support, Retention, NPS, Churn Prevention, Community
+RECHERCHE-PFLICHT: SaaS-Benchmarks (NPS, Churn, NRR), Best-Practices in Onboarding-UX
+und Support-Tooling aendern sich jaehrlich. Vor Empfehlungen aktuelle Benchmarks
+pruefen (openview.com, sixteenventures.com, intercom.com/customer-support-trends).
 
 ---
 

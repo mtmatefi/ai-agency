@@ -36,13 +36,19 @@ Du beschreibst was du brauchst. Claude erkennt welche Teams und Personen benoeti
 
 ---
 
-## Standards (eingebaut, nicht konfigurierbar)
+## Standards (eingebaut, nicht konfigurierbar — Stand 2026-05-18)
 
-- **Security:** OWASP ASVS Level 2
-- **Datenschutz:** ISO 27001 + DSGVO (Privacy by Design, Art. 25)
-- **Testing:** >= 80% Coverage, WCAG 2.1 AA, Core Web Vitals green
-- **Prozess:** API-First (OpenAPI vor Code), Keep a Changelog, Definition of Done
+- **Security:** OWASP ASVS 5.0 Level 2 (Mai 2025) + OWASP Top 10 for LLM Applications 2025
+- **Datenschutz:** ISO 27001:2022 + DSGVO (Privacy by Design, Art. 25)
+- **Testing:** >= 80% Coverage, WCAG 2.1 AA (EAA-Pflicht), WCAG 2.2 AA empfohlen, Core Web Vitals green
+- **Prozess:** API-First (OpenAPI 3.1 vor Code), Keep a Changelog, Definition of Done
 - **Deploy:** Kein Production-Deploy ohne QA + Security + PO Sign-Off
+- **Supply Chain:** SBOM (CycloneDX/SPDX) Pflicht ab 11.09.2026 (EU CRA), Sigstore/Cosign-Signing
+- **EU-Regulierung:** Tracker fuer NIS2 (DE) · EU AI Act (voll ab 02.08.2026) · CRA · DORA · Data Act · EAA
+
+**Recherche-Pflicht:** LLM-Wissen ist Monate veraltet. Jede Persona MUSS Standards,
+CVE-Status, Framework-Versionen und Gesetzes-Stand vor Empfehlung per WebSearch
+verifizieren. Siehe `CLAUDE.md` Abschnitt "RECHERCHE-PROTOKOLL".
 
 ---
 
@@ -141,6 +147,10 @@ one-stop-agency/
     data-analytics.md
     finance.md
     customer-success.md
+  .github/workflows/
+    auto-update.yml      <- Woechtentliches Self-Update (Datums-Stempel + Versions-Snapshot)
+  data/
+    versions.snapshot.json <- Auto-generierter Versions-Snapshot (von endoflife.date)
   update.ps1             <- Update-Script Windows
   update.sh              <- Update-Script Mac/Linux
   setup-project.ps1      <- Einmal-Setup Windows
@@ -161,19 +171,50 @@ dein-projekt/
 
 ---
 
-## Zentrale Pflege
+## Selbst-Update — Drei Ebenen
 
-Dieses Repository ist der **Single Source of Truth** fuer alle Projekte.
+Dieses Repo bleibt **automatisch aktuell** auf drei Ebenen:
 
-**Wenn du etwas aenderst** (neues Team, neue Richtlinie, aktualisierter Standard):
-1. Aendere es in diesem Repository
-2. Committe und pushe nach GitHub
-3. In jedem Projekt: `update.ps1` oder `bash update.sh` ausfuehren
-4. Die Aenderung ist sofort aktiv
+### Ebene 1 — Upstream (GitHub Actions, woechtentlich)
 
-**Automatische Updates** (optional):
-- Windows Task Scheduler: `update.ps1` taeglich um 9 Uhr
-- Mac/Linux Cron: `0 9 * * * cd /pfad/projekt && bash update.sh`
+`.github/workflows/auto-update.yml` laeuft jeden Montag 06:00 UTC und:
+- Aktualisiert den `Stand: YYYY-MM-DD`-Datumsstempel in `CLAUDE.md` + `README.md`
+- Holt aktuelle Framework-EOL-Versionen von endoflife.date in `data/versions.snapshot.json`
+- Committet automatisch wenn etwas geaendert wurde
+
+Manuell triggerbar via `Actions -> Auto-Update Agency -> Run workflow` in GitHub.
+
+### Ebene 2 — Downstream (in deinem Projekt)
+
+In jedem Projekt das die Agency nutzt: Scheduled Task / Cron, der `update.ps1`/`update.sh`
+einmal pro Tag ausfuehrt. So sind alle Projekte spaetestens 24h nach einem Push aktuell.
+
+**Windows Task Scheduler (taeglich 09:00):**
+```powershell
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Pfad\zu\Projekt\update.ps1"
+$Trigger = New-ScheduledTaskTrigger -Daily -At 9am
+Register-ScheduledTask -TaskName "Agency Update" -Action $Action -Trigger $Trigger
+```
+
+**Mac/Linux Cron (`crontab -e`):**
+```
+0 9 * * * cd /pfad/zu/projekt && bash update.sh >> /tmp/agency-update.log 2>&1
+```
+
+### Ebene 3 — Live-Recherche durch jede Persona
+
+Wichtigste Ebene: Jede Persona ist verpflichtet, vor jeder fachlichen Aussage
+(CVE-Status, Standard-Version, Framework-Version, Gesetzes-Stand) eine
+Web-Recherche durchzufuehren — siehe `CLAUDE.md` Abschnitt
+"RECHERCHE-PROTOKOLL". Das stellt sicher, dass auch zwischen Auto-Updates
+nichts Veraltetes empfohlen wird.
+
+### Was tun wenn du selbst etwas aenderst?
+
+1. Aendere die Datei in diesem Repository
+2. Commit + push -> GitHub Action verteilt nichts neues, aber der Datums-Bump
+   passiert am naechsten Montag automatisch
+3. In jedem Projekt: `update.ps1` oder `bash update.sh` ausfuehren (oder warten bis Scheduler laeuft)
 
 ---
 
@@ -221,6 +262,7 @@ git push -u origin main
 
 ---
 
-Version: 1.0 | Mai 2026
-Stack: React/TS/Next.js | PHP/Laravel | Android/Kotlin | Supabase
-Standards: OWASP ASVS L2 | ISO 27001 | DSGVO | WCAG 2.1 AA
+Version: 1.1 | Stand: 2026-05-18 (Selbst-Update woechtentlich, siehe oben)
+Stack: React 19 / TS 5.x / Next.js 16 | PHP 8.4 / Laravel 13 | Kotlin 2.1 / Compose 2026.04 | Supabase / Postgres 17
+Standards: OWASP ASVS 5.0 L2 | OWASP LLM Top 10 (2025) | ISO 27001:2022 | DSGVO | WCAG 2.1/2.2 AA | EAA
+EU-Regulierung: NIS2 (DE 06.12.2025) · AI Act (voll 02.08.2026) · CRA (Reporting 11.09.2026) · DORA · Data Act

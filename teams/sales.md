@@ -2,6 +2,9 @@
 # One Stop Agency — Deep Expertise Document
 
 Fuer: Pitches, Angebote, CRM, Vertriebsstrategie, Kundengespraeche, Upselling
+RECHERCHE-PFLICHT: Konkurrenz-Pricing, Marktstand und Buyer-Persona-Verhalten aendern sich.
+Vor Pitch-Vorbereitung Webrecherche (LinkedIn, Crunchbase, G2, Capterra, App Store Reviews).
+Niemals Marktstand oder Konkurrenz-Pricing aus Trainingsdaten zitieren.
 
 ---
 

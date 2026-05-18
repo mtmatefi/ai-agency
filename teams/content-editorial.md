@@ -2,6 +2,12 @@
 # One Stop Agency — Deep Expertise Document
 
 Fuer: Copywriting, Blog, technische Dokumentation, Newsletter, Social Media Texte
+RECHERCHE-PFLICHT: Spam-Regeln (Gmail/Yahoo Sender Requirements seit 2024), Such-Algos,
+TLD-Aenderungen, Urheberrechts-Trends, AI-Content-Disclosure (EU AI Act Art. 50)
+aendern sich. Vor jedem Versand/Publish offizielle Quellen pruefen.
+WICHTIG: Bei AI-generierten Texten im EU-Markt (ab 02.08.2026): Kennzeichnung Pflicht
+wenn (a) "Synthetic media" (Deepfake) oder (b) Information zu Public Interest.
+Reine Tool-Nutzung fuer Drafts ist KEIN Disclosure-Trigger — nur das Final-Output zaehlt.
 
 ---
 

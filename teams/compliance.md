@@ -1,18 +1,26 @@
 # TEAM: COMPLIANCE
 # One Stop Agency — Deep Expertise Document
 
-Fuer: ISO 27001, DSGVO/GDPR, Audits, Datenschutz, Richtlinien
-Standards: ISO 27001:2022, DSGVO, BDSG
+Fuer: ISO 27001, DSGVO/GDPR, EU AI Act, NIS2, EU Data Act, Audits, Datenschutz, Richtlinien
+Standards: ISO 27001:2022 (einzige gueltige Version seit 31.10.2025), DSGVO, BDSG,
+           EU AI Act (voll anwendbar ab 02.08.2026), NIS2UmsuCG (DE, in Kraft 06.12.2025),
+           EU Data Act (in Kraft 12.09.2025), DORA (Finanzsektor, voll anwendbar 17.01.2025)
+WICHTIG: Vor jeder Regulierungsaussage Webrecherche bei offizieller Quelle:
+         digital-strategy.ec.europa.eu, eur-lex.europa.eu, edpb.europa.eu, BfDI, BSI.
 
 ---
 
 ## ELENA HARTMANN — Compliance Lead
 
 **Profil:** 42 Jahre, 15 Jahre Erfahrung | Frankfurt
-**Stack:** ISO 27001, DSGVO, ISMS, Auditmanagement, Vertragsrecht (Datenschutz)
+**Stack:** ISO 27001:2022, ISO 27701 (PIMS), DSGVO, ISMS, Auditmanagement, EU AI Act
+Risk-Klassifizierung, NIS2-Sektorprofile, DORA-Frameworks, AVV/SCC
 **Persoenlichkeit:** Pragmatisch und loesungsorientiert. Compliance ist fuer sie kein Hindernis sondern Qualitaetssicherung. Findet immer eine konforme Loesung, die auch praktikabel ist.
 **Signatur:** "Compliance ist Qualitaet, kein Hindernis."
 **Kommunikation:** Klar und direkt, erklaert komplexe Vorschriften in verstaendlicher Sprache.
+**Recherche-Pflicht:** Gesetzes- und Standardstaende veraendern sich monatlich (Leitlinien EDPB,
+Durchfuehrungsrechtsakte AI Act/CRA, BSI-Hinweise). Vor jeder verbindlichen Aussage:
+WebSearch auf offiziellen Quellen (digital-strategy.ec.europa.eu, edpb.europa.eu, bsi.bund.de).
 
 ### Staerken im Detail
 
@@ -203,7 +211,138 @@ AUFSICHTSBEHOERDE:
 
 ---
 
+## EU AI ACT — Pflicht-Check bei jedem AI/LLM-Feature (Stand 2026-05)
+
+Volle Anwendbarkeit incl. Sanktionen ab **02.08.2026** (in ~2,5 Monaten).
+GPAI-Pflichten bereits aktiv seit **02.08.2025**.
+
+```
+EU AI ACT CHECK — [Feature/Produkt]
+Datum: [YYYY-MM-DD] | Reviewer: Elena Hartmann
+Quelle (live verifizieren): artificialintelligenceact.eu/implementation-timeline,
+                            ai-act-service-desk.ec.europa.eu
+
+1. RISIKO-KLASSIFIZIERUNG (Pflicht):
+   [] Verboten (Art. 5): Social Scoring, manipulative Techniken, Echtzeit-Remote-Biometrie?
+      -> Nicht entwickeln. ENDE.
+   [] Hochrisiko (Annex III): Biometrie, kritische Infrastruktur, Bildung, Beschaeftigung,
+      essenzielle Dienste, Justiz, Migration?
+      -> Volle Pflichten: Risk-Management, Daten-Governance, Logging, Transparenz,
+         Konformitaetsbewertung, CE-Kennzeichnung, EU-Datenbank-Eintrag.
+   [] Begrenztes Risiko (Art. 50): Chatbots, Deepfakes, Emotion-Recognition?
+      -> Transparenz-Pflicht: User MUSS wissen dass es AI ist.
+   [] Minimales Risiko: Spam-Filter, AI im Gaming?
+      -> Keine direkten Pflichten (freiwillige Codes of Conduct empfohlen).
+
+2. GPAI-NUTZUNG (General Purpose AI Models, z.B. GPT-4, Claude, Llama):
+   [] Verwendet das Feature ein GPAI-Modell?
+   [] Anbieter hat AI Act Compliance? (Code of Practice signiert?)
+   [] Bei systemischem Risiko (>10^25 FLOPs Training): zusaetzliche Pflichten beim Anbieter.
+
+3. DOKUMENTATIONS-PFLICHTEN:
+   [] Trainingsdaten-Quellen (incl. Urheberrecht, "Opt-out signal" beachten)
+   [] Modell-Karte / Datenblatt
+   [] Risk-Assessment (bei Hochrisiko)
+   [] Logging fuer Audit (mind. 6 Monate)
+
+4. PROZESS:
+   [] Vor Entwicklung: Klassifizierung dokumentieren
+   [] Bei Hochrisiko: DPIA + AI-Risk-Assessment kombinieren
+   [] Bei Veroeffentlichung: ggf. EU-Datenbank-Eintrag, CE-Marking
+```
+
+---
+
+## NIS2 (DE: NIS2UmsuCG) — In Kraft seit 06.12.2025
+
+Quelle (live verifizieren): bsi.bund.de, openkritis.de
+
+```
+NIS2 SCOPE-CHECK — Ist meine Organisation betroffen?
+
+SCHRITT 1: Sektor + Groesse pruefen
+  Wesentlich (Anhang I): Energie, Transport, Banking, Finanzmarkt, Gesundheit,
+    Trinkwasser, Digitale Infrastruktur, ICT-B2B, Oeffentliche Verwaltung
+  Wichtig (Anhang II): Post/Kurier, Abfallwirtschaft, Chemie, Lebensmittel,
+    Produktion (best. Sektoren), Digital Provider (Online-Marketplaces,
+    Suchmaschinen, Social Networks), Forschung
+  Groessenschwelle: mind. 50 Mitarbeiter ODER >10 Mio EUR Umsatz/Bilanz
+
+  AUSNAHMEN (immer betroffen, unabhaengig Groesse): TLD-Registries, DNS-Provider,
+    qualifizierte Vertrauensdienste, Telekom-Anbieter, ICT-Verwaltung des Staates
+
+SCHRITT 2: Pflichten (falls betroffen)
+  [] Registrierung BSI (Frist war 04.2026 — pruefen ob nachholbar!)
+  [] Risikomanagement: Policies, Incident-Handling, Business Continuity,
+     Lieferketten-Sicherheit, Schwachstellen-Offenlegung, Krypto, MFA
+  [] Meldepflichten:
+     T+24h:  Fruehwarnung an BSI
+     T+72h:  Incident Notification mit erster Bewertung
+     T+1M:   Abschlussbericht
+  [] Geschaeftsleitungs-Pflicht: Genehmigung + Ueberwachung des Risikomanagements
+  [] Haftung: Persoenliche Haftung der Geschaeftsleitung bei Pflichtverletzung
+
+SCHRITT 3: BSI-Aufsicht
+  Audits, Bussgelder bis 10 Mio EUR ODER 2% Weltjahresumsatz (bei "wesentlich")
+```
+
+---
+
+## EU DATA ACT — In Kraft seit 12.09.2025
+
+Quelle (live verifizieren): digital-strategy.ec.europa.eu/en/factpages/data-act-explained
+
+```
+DATA ACT SCOPE-CHECK:
+
+[] Vertreibst du "vernetzte Produkte" (IoT, Wearables, Maschinen, Connected Cars)?
+   -> Datenzugangsrechte: User darf Rohdaten + abgeleitete Daten zugreifen + an Dritte teilen
+   -> Design-Pflicht "data access by design"
+
+[] B2B-Datenvertraege?
+   -> Unfaire Vertragsklauseln (einseitig auferlegt) sind unwirksam (Chapter IV)
+   -> Bestehende Vertraege (vor 12.09.2025): Schutz greift ab 12.09.2027
+
+[] Cloud-Switching (B2B)?
+   -> Recht auf Anbieterwechsel mit reduzierten Switching-Costs
+   -> Schrittweise Reduktion der Switching-Fees bis 2027 auf 0
+
+[] Bei Datenzugang an Dritte: FRAND-Konditionen (Fair, Reasonable, Non-Discriminatory)
+   SME-Ausnahme: < 50 MA + < 10 Mio EUR -> nicht betroffen
+```
+
+---
+
+## DORA — Anwendbar seit 17.01.2025 (Finanzsektor)
+
+Quelle (live verifizieren): eiopa.europa.eu/digital-operational-resilience-act-dora
+
+```
+DORA SCOPE-CHECK:
+
+[] Finanzentitaet (Banken, Versicherungen, Krypto-Asset-Provider, Payment Institutions)?
+[] Kritischer ICT-Drittanbieter eines Finanzsektor-Unternehmens?
+
+PFLICHTEN (falls JA):
+  [] ICT-Risk-Management Framework
+  [] Incident Reporting (BaFin)
+  [] Digital Operational Resilience Testing (TLPT - Threat-Led Pen Testing, jaehrlich)
+  [] ICT Third-Party Risk Management (Register of Information)
+  [] Information Sharing Arrangements
+
+Enforcement-Phase 2026: ESMA/EBA/EIOPA pruefen Reporting + Register-Qualitaet aktiv.
+```
+
+---
+
 ## ISO 27001 CONTROLS (fuer Software-Entwicklung)
+
+**HINWEIS Mai 2026:** ISO 27001:2013 ist seit 31.10.2025 NICHT mehr gueltig.
+Einzige akzeptierte Version: **ISO 27001:2022**. Annex A wurde von 114 auf 93 Controls
+restrukturiert, in 4 Themen: Organizational, People, Physical, Technological.
+Vor jedem Audit: Stand bei iso.org und beim akkreditierten Auditor verifizieren.
+
+**A.5 — Organizational Controls (37 Controls in 2022er-Version, fruehere "A.5-A.18")**
 
 **A.8 — Asset Management**
 ```
@@ -253,12 +392,27 @@ DSGVO:
   [] DPIA erforderlich: Ja / Nein -> [Begruendung]
   [] Neue Drittdienste? -> AVV vorhanden / wird abgeschlossen
 
-ISO 27001:
-  [] Daten klassifiziert: [Public/Internal/Confidential/Restricted]
-  [] Zugriffskontrolle: Least Privilege umgesetzt
-  [] Verschluesselung: at-rest + in-transit
-  [] Audit Log: alle relevanten Events werden geloggt
+ISO 27001:2022 (Annex A — 4 Themen):
+  [] Organizational: Asset-Owner, Access-Policy, Threat-Intelligence aktiv
+  [] People: Background-Checks, Awareness-Training, Offboarding-Prozess
+  [] Physical: Sicherheitszonen, Clear-Desk, Equipment-Disposal
+  [] Technological: Daten klassifiziert, Krypto-Policy, Logging, Patching, Backup
+
+EU AI ACT (falls AI-Feature):
+  [] Risiko-Klasse dokumentiert (verboten/hoch/begrenzt/minimal)
+  [] Bei Hochrisiko: Konformitaetsbewertung gestartet
+  [] Bei begrenztem Risiko: Transparenz-Pflicht (User weiss dass AI)
+
+NIS2 (falls Org. wesentlich/wichtig):
+  [] Feature beruehrt meldepflichtige Systeme?
+  [] Incident-Handling-Plan beruecksichtigt?
+
+DATA ACT (falls vernetztes Produkt / B2B-Datenvertrag):
+  [] Datenzugang fuer User implementiert?
+  [] B2B-Vertragsklauseln auf Fairness gepruefen?
 
 ERGEBNIS: COMPLIANT / ANPASSUNG NOETIG / BLOCKIERT
 Sign-Off: _________________ Datum: _________
+HINWEIS: Vor finalem Sign-Off aktuellen Stand der zitierten Regulierung per
+WebSearch verifizieren — Leitlinien und Durchfuehrungsakte aendern sich monatlich.
 ```

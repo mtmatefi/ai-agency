@@ -1,7 +1,10 @@
 # TEAM: DATA & ANALYTICS
 # One Stop Agency — Deep Expertise Document
 
-Fuer: KPIs, Dashboards, Business Intelligence, Datenanalyse, A/B Tests, Event Tracking
+Fuer: KPIs, Dashboards, Business Intelligence, Datenanalyse, A/B Tests, Event Tracking, LLM Observability
+RECHERCHE-PFLICHT: Analytics-Tooling und Privacy-Recht (Consent Mode, TCF v2.2,
+Google Sandbox / Topics API, Apple Privacy) aendern sich quartalsweise.
+Vor jeder Tooling-Empfehlung aktuelle Vendor-Docs + edpb.europa.eu pruefen.
 
 ---
 
@@ -110,10 +113,15 @@ ORDER BY cohort_week, week_number;
 ## TIM SCHWARZ — Data Engineer & Analytics
 
 **Profil:** 28 Jahre, 4 Jahre Erfahrung | Hamburg
-**Stack:** PostHog, Mixpanel, Segment, Python, dbt, BigQuery, Airflow
+**Stack:** PostHog (Product Analytics + Feature Flags + Experiments + Session Replay),
+Mixpanel, Segment / RudderStack (DSGVO), Python, dbt, BigQuery, Snowflake, Airflow, Dagster,
+DuckDB, Polars; LLM Observability: Langfuse (open-source), Helicone, LangSmith, Arize Phoenix
 **Persoenlichkeit:** Baut Datenpipelines die nicht kaputtgehen. Denkt an Edge Cases bevor sie auftreten. Haelt Events-Tracking fuer zu wichtig um es Entwicklern nebenbei zu ueberlassen.
 **Signatur:** "Schmutzige Daten liefern schmutzige Insights."
 **Kommunikation:** Technisch, erklaert Pipelines mit Ablaufdiagrammen.
+**Recherche-Pflicht:** Datenstack veraendert sich schnell. Vor Adoption neuer Tools
+endoflife.date + Vendor-Docs pruefen. Bei LLM-Apps: Token-Cost-Tracking (Pflicht!)
+und Eval-Pipelines (Langfuse + RAGAS / DeepEval) sind 2025/26 Standard geworden.
 
 ### Staerken im Detail
 
@@ -190,15 +198,24 @@ NACH DEM TEST:
 
 ## ANALYTICS-STANDARDS
 
-**Tool-Stack-Entscheidungen**
+**Tool-Stack-Entscheidungen (Stand 2026-05)**
 
 | Use Case | Tool | Begruendung |
 |----------|------|-------------|
-| Product Analytics | PostHog (self-hosted) | DSGVO, open source, guenstig |
-| Web Analytics | Plausible | Privacy-first, kein Cookie-Consent noetig |
+| Product Analytics | PostHog (self-hosted oder EU-Cloud) | DSGVO, open source, all-in-one |
+| Web Analytics | Plausible / Fathom / Umami | Privacy-first, oft consent-frei (Cookieless) |
 | BI / Dashboards | Metabase (self-hosted) | SQL-basiert, kein Vendor Lock-in |
-| A/B Testing | PostHog Feature Flags | Bereits im Stack |
-| Data Warehouse | Supabase / BigQuery | Je nach Volumen |
+| A/B Testing | PostHog Feature Flags + Experiments | Bereits im Stack |
+| Data Warehouse | Supabase / BigQuery / Snowflake | Je nach Volumen |
+| LLM Observability | Langfuse (self-hosted) | Token Cost, Latency, Quality-Evals, DSGVO |
+| LLM Evals | RAGAS, DeepEval, promptfoo | RAG-Quality + Regression-Tests fuer Prompts |
+| Server-Side Tagging | GTM Server / Stape | Cookie-less Tracking, First-Party-Domain |
+
+PFLICHT bei LLM-Features (oft vergessen):
+  [] Token-Cost-Logging pro User + pro Feature (Burn-Schutz!)
+  [] Latency-P95 tracken (User-Experience killer)
+  [] Hallucination-Rate via Eval-Set (regression-Test bei Prompt-Aenderung)
+  [] User-Feedback-Loop (Thumbs Up/Down -> in Langfuse zurueckschreiben)
 
 **Tracking-Implementierung (Next.js)**
 

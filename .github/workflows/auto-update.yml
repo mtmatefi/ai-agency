@@ -1,0 +1,70 @@
+name: Auto-Update Agency
+
+# Selbst-Update-Workflow fuer das One-Stop-Agency-Repo.
+# Laeuft woechtentlich (Montag 06:00 UTC) und manuell via workflow_dispatch.
+#
+# Was es macht:
+#  1. Bumpt den "Stand: YYYY-MM-DD"-Datumsstempel in CLAUDE.md
+#  2. Holt aktuelle Framework-EOL-Daten von endoflife.date und schreibt sie in
+#     versions.snapshot.json (informativ — Personas pruefen weiterhin live)
+#  3. Commit + Push wenn etwas geaendert wurde
+#
+# Hinweis: Dieser Workflow ersetzt NICHT die Pflicht der Personas zur Live-Recherche.
+# Er sorgt nur dafuer, dass Datums- und Versions-Snapshots nicht alt sind.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Mo 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    name: Stamp + Snapshot Update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set today (UTC)
+        id: today
+        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Bump Datums-Stempel in CLAUDE.md + README
+        run: |
+          TODAY="${{ steps.today.outputs.date }}"
+          # CLAUDE.md: "Stand: 2026-05-18" -> "Stand: TODAY"
+          sed -i -E "s/Stand: 20[0-9]{2}-[0-9]{2}-[0-9]{2}/Stand: ${TODAY}/g" CLAUDE.md README.md || true
+
+      - name: Snapshot aktuelle Framework-Versionen (endoflife.date)
+        run: |
+          mkdir -p data
+          TODAY="${{ steps.today.outputs.date }}"
+          PRODUCTS=("nodejs" "react" "nextjs" "laravel" "php" "kotlin" "android" "postgresql")
+          echo "{" > data/versions.snapshot.json
+          echo "  \"_generated\": \"${TODAY}\"," >> data/versions.snapshot.json
+          echo "  \"_source\": \"https://endoflife.date\"," >> data/versions.snapshot.json
+          echo "  \"_note\": \"Snapshot. Personas muessen weiterhin live verifizieren.\"," >> data/versions.snapshot.json
+          FIRST=true
+          for P in "${PRODUCTS[@]}"; do
+            if $FIRST; then FIRST=false; else echo "," >> data/versions.snapshot.json; fi
+            RESPONSE=$(curl -fsSL "https://endoflife.date/api/${P}.json" || echo "[]")
+            # nur die ersten 3 Eintraege behalten (current + 2 vorige)
+            TRIMMED=$(echo "$RESPONSE" | jq '.[0:3]' || echo "[]")
+            printf '  "%s": %s' "$P" "$TRIMMED" >> data/versions.snapshot.json
+          done
+          echo "" >> data/versions.snapshot.json
+          echo "}" >> data/versions.snapshot.json
+
+      - name: Commit changes (falls vorhanden)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CLAUDE.md README.md data/versions.snapshot.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Aenderungen — Skip Commit."
+          else
+            git commit -m "chore(auto-update): refresh date stamp + versions snapshot $(date -u +%Y-%m-%d)"
+            git push
+          fi

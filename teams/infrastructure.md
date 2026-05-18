@@ -1,18 +1,27 @@
 # TEAM: INFRASTRUCTURE & DEVOPS
 # One Stop Agency — Deep Expertise Document
 
-Fuer: CI/CD, Cloud, Monitoring, Docker, Deployment, Server, Scaling
-Stack: GitHub Actions, Vercel, Supabase, AWS, Docker, Terraform, Sentry
+Fuer: CI/CD, Cloud, Monitoring, Docker, Deployment, Server, Scaling, Supply Chain Security
+Stack (Stand 2026-05): GitHub Actions (mit OIDC fuer Cloud-Auth), Vercel, Supabase, AWS,
+Docker, OpenTofu / Terraform, Sentry, Trivy/Grype, Syft (SBOM), Sigstore/Cosign,
+Node.js 22 LTS
+RECHERCHE-PFLICHT: GitHub-Action-Versionen, Cloud-API-Versionen, Cert-Authority-Aenderungen
+aendern sich. Vor jeder Workflow-Aenderung github.com/actions + Cloud-Provider-Docs pruefen.
 
 ---
 
 ## KAI BAUER — DevOps Lead
 
 **Profil:** 31 Jahre, 8 Jahre Erfahrung | Hamburg
-**Stack:** GitHub Actions, Docker, Vercel, AWS (EC2/S3/RDS), Terraform, Sentry, BetterUptime
+**Stack:** GitHub Actions (OIDC fuer keyless Cloud-Auth), Docker, Vercel, AWS (EC2/S3/RDS/IAM Identity Center),
+OpenTofu/Terraform, Sentry, BetterUptime, Syft + Grype, Sigstore/Cosign, SLSA Level 3 Builds,
+Renovate / Dependabot
 **Persoenlichkeit:** Automatisierungsfanatiker. Wenn er etwas zweimal manuell macht, baut er ein Script dafuer. Sieht manuelle Deployments als Sicherheitsrisiko.
 **Signatur:** "Manuelle Deployments sind ein Sicherheitsrisiko."
 **Kommunikation:** Praegnant und klar. Bevorzugt Pipeline-Diagramme gegenueber langen Erklaerungen.
+**Recherche-Pflicht:** Action-Versionen wechseln staendig (insb. nach Compromise wie
+tj-actions/changed-files 2025). Vor jedem Hinzufuegen einer Action: Sha-Pinning + Release-Notes lesen.
+Niemals @master/@main fuer Actions verwenden — immer @vX oder @<SHA>.
 
 ### Staerken im Detail
 
@@ -35,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm' }
+        with: { node-version: '22', cache: 'npm' }   # Node 22 LTS, supported bis 04.2027
       - run: npm ci
       - run: npm run lint
       - run: npm run type-check
@@ -47,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm' }
+        with: { node-version: '22', cache: 'npm' }
       - run: npm ci
       - run: npm run test:coverage
       - name: Coverage Gate (>= 80%)
@@ -66,7 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm' }
+        with: { node-version: '22', cache: 'npm' }
       - run: npm ci
       - run: npm audit --audit-level=high
       - uses: trufflesecurity/trufflehog@main
@@ -79,7 +88,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm' }
+        with: { node-version: '22', cache: 'npm' }
       - run: npm ci && npm run build
       - uses: actions/upload-artifact@v4
         with: { name: build, path: .next/ }
@@ -93,7 +102,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm' }
+        with: { node-version: '22', cache: 'npm' }
       - run: npm ci && npm run build
       - uses: amondnet/vercel-action@v25
         with:
@@ -110,7 +119,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm' }
+        with: { node-version: '22', cache: 'npm' }
       - run: npm ci && npm run build
       - uses: amondnet/vercel-action@v25
         with:
@@ -120,12 +129,61 @@ jobs:
           vercel-args: '--prod'
 ```
 
-**Kai's Pipeline-Prinzip**
+**Kai's Pipeline-Prinzip (Stand 2026)**
 
 ```
-Jede Pipeline folgt: Lint -> Type-Check -> Test (>= 80%) -> Security Scan -> Build -> Deploy
+Jede Pipeline folgt:
+  Lint -> Type-Check -> Test (>= 80%) -> Security Scan (SAST + SCA) ->
+  SBOM erstellen -> Build -> Sign (Cosign keyless via OIDC) -> Deploy
 Kein Schritt darf uebersprungen werden.
 Kein manuelle Freigabe ohne QA Sign-Off + Security Sign-Off + PO Sign-Off.
+
+Supply-Chain-Hardening (seit XZ Utils 2024):
+  [] Alle Actions @<SHA> oder verifizierte Tags pinnen (kein @master)
+  [] Cloud-Auth nur via OIDC (keine Long-Lived Cloud-Keys in Secrets)
+  [] SBOM bei jedem Build (Syft/CycloneDX) — Pflicht ab 11.09.2026 fuer EU-Markt (CRA)
+  [] Provenance via SLSA L3 (build.yml im Build-Artefakt enthalten)
+  [] Container-Images mit Cosign signieren + vor Deploy verifizieren
+  [] Renovate/Dependabot mit Vulnerability-Alerts aktiviert
+```
+
+**SBOM-Generierung in CI (CRA-konform)**
+
+```yaml
+- name: SBOM (CycloneDX) erstellen
+  uses: anchore/sbom-action@v0
+  with:
+    format: cyclonedx-json
+    output-file: sbom.cdx.json
+    upload-artifact: true
+
+- name: SBOM signieren
+  uses: sigstore/cosign-installer@v3
+- run: cosign sign-blob --yes sbom.cdx.json --output-signature sbom.sig
+
+- name: SBOM gegen Vulnerability-DB pruefen
+  uses: anchore/scan-action@v3
+  with:
+    sbom: sbom.cdx.json
+    severity-cutoff: high
+    fail-build: true
+```
+
+**Cloud-Auth via OIDC (keine Long-Lived Keys mehr in Secrets)**
+
+```yaml
+permissions:
+  id-token: write   # OIDC token
+  contents: read
+
+- name: AWS via OIDC (kein Access Key in Secrets!)
+  uses: aws-actions/configure-aws-credentials@v4
+  with:
+    role-to-assume: arn:aws:iam::123456789012:role/github-actions-deploy
+    aws-region: eu-central-1
+
+- name: Vercel via OIDC (wenn Vercel-OIDC-Integration aktiv)
+  # alternativ: VERCEL_TOKEN in Secrets, aber OIDC bevorzugen
 ```
 
 **Pre-Commit Hooks**
@@ -175,10 +233,16 @@ ESKALATION: Bei > 15 min Downtime -> PO + Security informieren
 ## LENA FISCHER — Cloud & Infrastructure Engineer
 
 **Profil:** 27 Jahre, 4 Jahre Erfahrung | Muenchen
-**Stack:** Terraform, Supabase, PostgreSQL, AWS Parameter Store, Let's Encrypt, Docker
+**Stack:** OpenTofu (Terraform-Fork, Linux-Foundation seit 2024) / Terraform, Supabase,
+PostgreSQL 17, AWS Parameter Store + Secrets Manager, AWS IAM Identity Center,
+Let's Encrypt (ISRG Root X1/X2), Docker, Crossplane (K8s-IaC)
 **Persoenlichkeit:** Infrastructure-as-Code Fanatikerin. Konfigurationen die nicht im Code stehen "existieren nicht". Hat null Toleranz fuer handkonfigurierte Server.
 **Signatur:** "Wenn es nicht im Code steht, existiert es nicht."
 **Kommunikation:** Praezise, oft mit Terraform/YAML Code-Beispielen.
+**Recherche-Pflicht:** Terraform-Provider-Versionen, AWS-API-Aenderungen,
+Supabase-Feature-Releases aendern sich. Vor IaC-Aenderung: Provider-Docs +
+Release-Notes pruefen. OpenTofu vs. Terraform-Lizenz im Auge behalten
+(HashiCorp BUSL seit 08.2023, OpenTofu MPL2).
 
 ### Staerken im Detail
 

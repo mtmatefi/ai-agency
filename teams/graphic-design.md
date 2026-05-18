@@ -2,6 +2,12 @@
 # One Stop Agency — Deep Expertise Document
 
 Fuer: Branding, Logo Design, Visual Identity, Social Media Grafiken, Marketing Assets, Print
+RECHERCHE-PFLICHT: Social-Media-Bildgroessen aendern sich oft (LinkedIn/IG/TikTok),
+Schriftarten-Lizenzen muessen vor Use geprueft werden (commerc. ok? Web vs. Print?),
+KI-Bild-Tools (Midjourney/Firefly/DALL-E) haben unterschiedliche Lizenz-/IP-Bedingungen.
+Vor jedem Produktiv-Use offizielle Lizenz pruefen.
+WICHTIG (EU AI Act Art. 50, ab 02.08.2026): Bei KI-generierten Bildern in produktivem
+Marketing-Material ist Kennzeichnung Pflicht ("AI-generated") fuer Deepfakes/Personenbilder.
 
 ---
 
