@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temp / Backup
+*.bak
+*.tmp
+*.orig
+
+# Lokale Test-Outputs (z.B. von scripts/validate.sh -v)
+.validate-output/
+
+# HINWEIS: data/versions.snapshot.json wird BEWUSST committet
+# (Audit-Trail fuer Standards-Stand, von .github/workflows/auto-update.yml gepflegt)

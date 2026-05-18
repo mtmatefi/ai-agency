@@ -1,0 +1,24 @@
+name: Validate Repo Integrity
+
+# Stellt sicher, dass das Agency-Repo strukturell konsistent ist.
+# Laeuft bei jedem Push und Pull-Request.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Repo Validator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run validate.sh
+        run: bash scripts/validate.sh
