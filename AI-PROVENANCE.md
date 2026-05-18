@@ -206,6 +206,32 @@ Notes:    Klassifikator-Sperre beim git-hook-Auto-Installer in v1.6 hat
           Profil-Auswahl ist standard CLI-Interaktion. Custom Profile durch
           eigene JSON-Datei in profiles/ erweiterbar.
           Bash-Profile-Parsing erfordert `jq` — Fallback dokumentiert.
+Commit:   3304506
+
+## 2026-05-18 — v1.8.0 Maintainer-Skill `/agency` + Maintainer-Modus
+
+Files:
+  - .claude/skills/agency.md                                  (NEW, AI-generated)
+  - templates/maintainer-checklists/add-new-team.md           (NEW, AI-generated)
+  - templates/maintainer-checklists/add-new-profile.md        (NEW, AI-generated)
+  - templates/maintainer-checklists/add-new-regulation.md     (NEW, AI-generated)
+  - templates/maintainer-checklists/bump-version.md           (NEW, AI-generated)
+  - CLAUDE.md                                                 (MODIFIED, +MAINTAINER-MODUS Sektion)
+  - scripts/validate.sh                                       (MODIFIED, +Skill + Checklisten-Checks)
+  - README.md                                                 (MODIFIED, +Skill-Sektion)
+  - CHANGELOG.md                                              (MODIFIED, +v1.8.0)
+
+Model:    claude-opus-4-7 (1M context)
+Persona:  Agency Director + Tech Writer (Ben, Checklisten) + DevOps (Kai, validate)
+Reviewer: OFFEN bis mtmatefi Sign-Off
+Task:     Skill fuer Wartung + kontinuierliche Verbesserung des Agency-Repos selbst.
+          Maintainer-Modus aktiviert sich automatisch wenn Marker-Dateien praesent
+          sind, erzwingt Validator/CHANGELOG/Provenance/Sign-Off-Konsistenz pro Commit.
+Notes:    Skill-Datei in .claude/skills/ (Claude-Code-Konvention). Subkommandos:
+          check, audit, optimize, new-team, new-profile, new-regulation, bump, log.
+          Auto-Loading des Skills geschieht ueber Claude-Code-Discovery der
+          `.claude/skills/`-Directory. Maintainer-Modus-Erkennung ueber File-Marker
+          (LICENSE + CHANGELOG + AI-PROVENANCE + teams/14 + profiles/ + validate.sh).
 Commit:   (dieser Commit)
 
 <!-- AI-PROVENANCE-LOG-END -->

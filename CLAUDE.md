@@ -7,6 +7,63 @@ und welche Personen gebraucht werden - und koordiniere sie. Du musst nichts akti
 
 ---
 
+## MAINTAINER-MODUS (aktiviert bei Aenderungen am Agency-Repo selbst)
+
+Diese Sektion gilt NUR wenn du gerade `mtmatefi/ai-agency` selbst editierst —
+nicht wenn du in einem Projekt arbeitest das die Agency NUTZT.
+
+**Detection:** dieses Verzeichnis hat alle folgenden Marker:
+`CLAUDE.md` + `LICENSE` + `CHANGELOG.md` + `AI-PROVENANCE.md` + `teams/` (14 Dateien)
++ `profiles/` + `scripts/validate.sh` + `.github/workflows/`. Wenn ja → Maintainer-Modus.
+
+**Wenn aktiv, gelten Zusatzregeln BEI JEDER PROMPT-ANTWORT:**
+
+1. **Validator ist Gate.** Vor jedem Commit-Vorschlag:
+   ```bash
+   bash scripts/validate.sh
+   ```
+   Wenn nicht gruen → Commit-Vorschlag erst nach Fix. NIEMALS einen
+   roten Validator durchwinken.
+
+2. **CHANGELOG.md gehoert in jeden bedeutungsvollen Commit.**
+   Bei mehr als 3 Dateien geaendert oder bei Feature/Fix: Eintrag unter
+   `## [Unreleased]` (oder Versions-Bump).
+
+3. **AI-PROVENANCE.md gehoert in jeden Commit den du vorschlaegst.**
+   Append-only — siehe `.github/workflows/provenance-integrity.yml`.
+   Format aus `templates/AI-PROVENANCE.md` exakt einhalten.
+
+4. **Sign-Off-Matrix konsistent halten.** Bei Aenderungen an:
+   - `CLAUDE.md` Sign-Off-Matrix → Stellvertreter mit dokumentieren
+   - neuen Personas in `teams/*.md` → in Matrix einbinden falls Pflicht-Reviewer
+   - neuen Profilen → ggf. neuer Sign-Off-Eintrag
+
+5. **Co-Authored-By bleibt Pflicht.**
+
+6. **Skill `/agency` ist verfuegbar** und sollte fuer alle nicht-trivialen
+   Wartungs-Operationen verwendet werden (siehe `.claude/skills/agency.md`).
+   Subkommandos: `check`, `audit`, `optimize`, `new-team`, `new-profile`,
+   `new-regulation`, `bump`, `log`.
+
+7. **Bei strukturellen Aenderungen (neues Team / Profil / Regulierung) IMMER
+   die Checkliste aus `templates/maintainer-checklists/` befolgen** —
+   sonst wird das Repo inkonsistent (Routing fehlt irgendwo, validate.sh
+   meckert, Profile referenzieren tote Teams etc.).
+
+8. **Kontinuierliche Optimierung.** Nach jeder 2-3 Sessions (oder bei
+   passender Gelegenheit) `/agency optimize` vorschlagen — das macht
+   Webrecherche zu Standards / Frameworks / Regulierungen und identifiziert
+   Drift gegenueber dem aktuellen Stand der Welt.
+
+9. **Pruefe bei JEDEM Prompt im Maintainer-Modus zuerst:**
+   - Ist das ein Wartungs-Request → ggf. `/agency <cmd>` vorschlagen
+   - Wenn der User direkt editiert (z.B. „aendere X in CLAUDE.md"): folge
+     trotzdem Regeln 1-5 (Validator, CHANGELOG, Provenance, Sign-Off, Co-Author)
+   - Wenn der User offensichtlich verwirrt was Agency-Repo vs. Zielprojekt
+     ist: explizit klarstellen
+
+---
+
 ## PROJEKT-PROFIL — was zaehlt fuer dieses spezifische Projekt
 
 Wenn `.agency/config.json` im Projekt-Root existiert, IST das die Quelle der

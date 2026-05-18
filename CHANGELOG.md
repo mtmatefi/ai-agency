@@ -7,6 +7,28 @@ Versionierung: [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-05-18
+
+### Hinzugefuegt — Maintainer-Skill `/agency`
+- **.claude/skills/agency.md** — Skill fuer das Editieren des Agency-Repos
+  selbst. Subkommandos `check`, `audit`, `optimize`, `new-team`,
+  `new-profile`, `new-regulation`, `bump`, `log`.
+- **templates/maintainer-checklists/** — Schritt-fuer-Schritt-Wizards:
+  - `add-new-team.md` (12 Schritte inkl. Routing, Sign-Off, Profile, Validator)
+  - `add-new-profile.md`
+  - `add-new-regulation.md` (web-research-intensiv)
+  - `bump-version.md`
+- **CLAUDE.md neue Sektion MAINTAINER-MODUS** — automatisch aktiv bei
+  Aenderungen am Agency-Repo selbst (Marker-Detection). Erzwingt Validator
+  + CHANGELOG + AI-PROVENANCE + Sign-Off-Matrix-Konsistenz bei jedem
+  Commit-Vorschlag.
+- **scripts/validate.sh:** zusaetzlicher Check fuer `.claude/skills/agency.md`
+  und die 4 Maintainer-Checklisten.
+
+### Geaendert
+- README: neue Sektion "Maintainer-Skill /agency" mit Subkommando-Tabelle.
+- README: Repo-Struktur um `.claude/skills/` + `templates/maintainer-checklists/`.
+
 ## [1.7.0] - 2026-05-18
 
 ### Hinzugefuegt — Projekt-Profile (Slim-Mode-Setup)

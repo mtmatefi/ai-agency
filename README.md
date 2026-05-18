@@ -208,6 +208,13 @@ one-stop-agency/
     ai-headers-snippets.md <- Datei-Header + Block-Marker Snippets pro Sprache
     githooks/
       pre-commit         <- Client-side Hook: blockt AI-PROVENANCE.md-Modifikation
+    maintainer-checklists/   <- Schritt-fuer-Schritt-Wizards (vom /agency-Skill genutzt)
+      add-new-team.md
+      add-new-profile.md
+      add-new-regulation.md
+      bump-version.md
+  .claude/skills/
+    agency.md            <- Maintainer-Skill (siehe oben)
   scripts/
     validate.sh          <- Repo-Integritaets-Validator (CI-getrieben)
   AI-PROVENANCE.md       <- Audit-Trail des Repos selbst (Dogfooding)
@@ -234,6 +241,41 @@ dein-projekt/
     templates/           <- AI-Provenance-Template + Snippets pro Sprache
   ...                    <- Dein eigentlicher Projekt-Code
 ```
+
+---
+
+## Maintainer-Skill `/agency` — wenn du dieses Repo selbst editierst
+
+Wenn du in `mtmatefi/ai-agency` arbeitest und Aenderungen am Setup vornimmst,
+nutzt Claude automatisch den **Maintainer-Modus** (definiert in `CLAUDE.md`):
+Validator wird vor jedem Commit-Vorschlag durchlaufen, CHANGELOG +
+AI-PROVENANCE gepflegt, Sign-Off-Matrix konsistent gehalten.
+
+Aktive Wartung passiert ueber den `/agency`-Skill (`.claude/skills/agency.md`):
+
+| Subkommando | Was es macht |
+|-------------|--------------|
+| `/agency` | Status + Menue |
+| `/agency check` | Schneller Validator-Run + Repo-Status |
+| `/agency audit` | Tiefe Konsistenz-Pruefung (Personas, Sign-Offs, Profile, Standards-Aktualitaet via Webrecherche, CHANGELOG-vs-Git-Drift, Branch-Protection) |
+| `/agency optimize` | Kontinuierliche Verbesserung — Webrecherche zu neuen EU-Regulierungen, neuen Framework-Releases, OWASP-Updates, Persona-Tiefen-Vorschlaege. Output: priorisierte Liste P0/P1/P2. |
+| `/agency new-team` | Guided Wizard: neues Team hinzufuegen (folgt `templates/maintainer-checklists/add-new-team.md`) |
+| `/agency new-profile` | Guided Wizard: neues Profil |
+| `/agency new-regulation` | Guided Wizard: neue EU-/internationale Regulierung integrieren (web-research-intensiv) |
+| `/agency bump <m\|n\|p>` | Versions-Bump inkl. CHANGELOG + Tag-Vorschlag |
+| `/agency log "<task>"` | Sauber formatierten AI-PROVENANCE-Eintrag anfuegen |
+
+Globale Pflichten (gelten in jedem Subkommando):
+1. Recherche-Pflicht (WebSearch vor jeder datierten Aussage)
+2. AI-Provenance fuer alles was Claude generiert
+3. Validator gruen vor jedem Commit-Vorschlag
+4. Append-only fuer CHANGELOG + AI-PROVENANCE
+5. Co-Authored-By: Claude in jedem Commit-Vorschlag
+
+Die Checklisten in `templates/maintainer-checklists/` sind die Quelle der
+Wahrheit fuer Schritt-fuer-Schritt-Operationen. Wenn die Checkliste sich
+aendert, aendert sich das Verhalten — kein Doppel-Dokumentieren in der
+Skill-Datei.
 
 ---
 

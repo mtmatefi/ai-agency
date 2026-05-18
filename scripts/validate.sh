@@ -97,8 +97,23 @@ section "Templates"
 REQUIRED_TEMPLATES=(
     "templates/AI-PROVENANCE.md"
     "templates/ai-headers-snippets.md"
+    "templates/githooks/pre-commit"
+    "templates/maintainer-checklists/add-new-team.md"
+    "templates/maintainer-checklists/add-new-profile.md"
+    "templates/maintainer-checklists/add-new-regulation.md"
+    "templates/maintainer-checklists/bump-version.md"
 )
 for f in "${REQUIRED_TEMPLATES[@]}"; do
+    if [ -f "$f" ]; then check_ok "$f"; else check_fail "$f fehlt"; fi
+done
+
+# ---------------------------------------------------------------------------
+section "Skills"
+
+REQUIRED_SKILLS=(
+    ".claude/skills/agency.md"
+)
+for f in "${REQUIRED_SKILLS[@]}"; do
     if [ -f "$f" ]; then check_ok "$f"; else check_fail "$f fehlt"; fi
 done
 
