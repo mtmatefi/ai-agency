@@ -57,7 +57,7 @@ verifizieren. Siehe `CLAUDE.md` Abschnitt "RECHERCHE-PROTOKOLL".
 
 ## Schnellstart
 
-### Ein-Zeilen-Install (Windows / PowerShell) — empfohlen
+### Ein-Zeilen-Install (Windows / PowerShell) — bequem, mittlere Sicherheit
 
 In deinem Projekt-Ordner ausfuehren — laedt `update.ps1` von GitHub und startet ihn sofort:
 
@@ -68,11 +68,60 @@ Invoke-WebRequest "https://raw.githubusercontent.com/mtmatefi/ai-agency/main/upd
 
 Danach: Projekt in Cursor / Claude Code oeffnen — `CLAUDE.md` wird automatisch geladen.
 
+**Sicherheitshinweis:** Dieses Pattern ist `curl | bash`-aequivalent — du
+vertraust meinem GitHub-Account + GitHub selbst. Fuer hoehere Sicherheit
+siehe naechster Abschnitt + `SECURITY.md`.
+
 ### Ein-Zeilen-Install (Mac/Linux)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mtmatefi/ai-agency/main/update.sh -o update.sh && bash update.sh
 ```
+
+### Sicherer Install (Inspektion vor Ausfuehrung — empfohlen fuer Production)
+
+```bash
+# 1. Repo klonen (oder eine Tag-Release herunterladen)
+git clone --depth 1 https://github.com/mtmatefi/ai-agency.git /tmp/agency
+
+# 2. Scripts und CLAUDE.md selbst durchlesen
+less /tmp/agency/update.sh
+less /tmp/agency/CLAUDE.md
+less /tmp/agency/SECURITY.md
+
+# 3. Wenn alles OK: Setup ausfuehren
+bash /tmp/agency/setup-project.sh
+```
+
+```powershell
+# Windows-Aequivalent
+git clone --depth 1 https://github.com/mtmatefi/ai-agency.git C:\Temp\agency
+notepad C:\Temp\agency\update.ps1
+notepad C:\Temp\agency\CLAUDE.md
+& C:\Temp\agency\setup-project.ps1
+```
+
+### Pin auf bekannten guten Commit (maximale Reproduzierbarkeit)
+
+Statt `main` einen verifizierten Commit-SHA verwenden — Updates dann bewusst
+durch SHA-Wechsel ausloesen, nicht automatisch:
+
+```powershell
+# Windows — Commit-SHA in URL + Parameter pinnen
+$Sha = "7015f52"   # durch verifizierten Commit ersetzen
+Invoke-WebRequest "https://raw.githubusercontent.com/mtmatefi/ai-agency/$Sha/update.ps1" -OutFile update.ps1
+.\update.ps1 -RepoUrl "https://raw.githubusercontent.com/mtmatefi/ai-agency/$Sha"
+```
+
+```bash
+# Mac/Linux
+SHA="7015f52"
+curl -fsSL "https://raw.githubusercontent.com/mtmatefi/ai-agency/$SHA/update.sh" -o update.sh
+AGENCY_REPO_URL="https://raw.githubusercontent.com/mtmatefi/ai-agency/$SHA" bash update.sh
+```
+
+Vollstaendiges Threat-Modell + weitere Mitigationen siehe `SECURITY.md`.
+Branch-Protection-Setup siehe `BRANCH_PROTECTION.md`.
 
 ### Neues Projekt einrichten (Windows, lokale Kopie)
 
@@ -157,6 +206,15 @@ one-stop-agency/
   templates/
     AI-PROVENANCE.md     <- Append-only Log-Template (wird im Zielprojekt initialisiert)
     ai-headers-snippets.md <- Datei-Header + Block-Marker Snippets pro Sprache
+    githooks/
+      pre-commit         <- Client-side Hook: blockt AI-PROVENANCE.md-Modifikation
+  scripts/
+    validate.sh          <- Repo-Integritaets-Validator (CI-getrieben)
+  AI-PROVENANCE.md       <- Audit-Trail des Repos selbst (Dogfooding)
+  SECURITY.md            <- Threat-Modell, Vulnerability-Reporting
+  BRANCH_PROTECTION.md   <- Step-by-step main-Branch-Schutz in GitHub
+  LICENSE                <- MIT
+  CHANGELOG.md           <- Keep-a-Changelog
   update.ps1             <- Update-Script Windows
   update.sh              <- Update-Script Mac/Linux
   setup-project.ps1      <- Einmal-Setup Windows

@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# .githooks/pre-commit
+# Verhindert lokale Modifikation/Loeschung bestehender AI-PROVENANCE.md-Eintraege.
+#
+# Aktivieren: bash scripts/install-githooks.sh
+# Oder manuell:  git config core.hooksPath .githooks
+
+set -e
+
+STAGED=$(git diff --cached --name-only)
+
+# Pruefe alle gestagten AI-PROVENANCE.md-Dateien
+for f in $(printf "%s\n" "$STAGED" | grep -E '(^|/)AI-PROVENANCE\.md$' || true); do
+    [ -z "$f" ] && continue
+    [ -f "$f" ] || continue
+
+    # Zaehle entfernte Zeilen (^- aber nicht ^---)
+    REMOVED=$(git diff --cached "$f" | grep -cE '^-[^-]' || true)
+
+    if [ "$REMOVED" -gt 0 ]; then
+        echo ""
+        echo "============================================================"
+        echo "  PRE-COMMIT BLOCK: AI-PROVENANCE.md ist append-only!"
+        echo "============================================================"
+        echo ""
+        echo "  Datei:           $f"
+        echo "  Entfernte Lines: $REMOVED"
+        echo ""
+        echo "  Geaenderte/entfernte Zeilen (max. 10):"
+        git diff --cached "$f" | grep -E '^-[^-]' | head -10 | sed 's/^/    /'
+        echo ""
+        echo "  Was zu tun:"
+        echo "    - Stage zuruecksetzen: git restore --staged $f"
+        echo "    - Nur unten neue Eintraege anhaengen"
+        echo "    - Korrekturen werden als NEUER Eintrag mit Verweis aufgenommen"
+        echo ""
+        echo "  Bypass nur in Notfaellen (z.B. Repo-Migration):"
+        echo "    git commit --no-verify -m \"...\""
+        echo "    -> Begruendung im PR dokumentieren!"
+        echo ""
+        exit 1
+    fi
+done
+
+exit 0

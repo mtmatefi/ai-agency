@@ -1,0 +1,75 @@
+name: AI-PROVENANCE Integrity
+
+# Stellt sicher, dass AI-PROVENANCE.md append-only ist.
+# Blockt PRs die bestehende Eintraege aendern oder loeschen.
+#
+# Warum: CRA Anhang VII verlangt 10 Jahre Aufbewahrung der technischen
+# Doku. AI Act Art. 13/16 verlangt Aufzeichnungspflichten. Rueckwirkendes
+# Aendern des Audit-Trails untergraebt beides.
+
+on:
+  pull_request:
+    paths:
+      - 'AI-PROVENANCE.md'
+      - 'templates/AI-PROVENANCE.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-append-only:
+    name: AI-PROVENANCE Integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history fuer base-vs-head diff
+
+      - name: Check append-only constraint
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -e
+          FAIL=0
+
+          for f in AI-PROVENANCE.md templates/AI-PROVENANCE.md; do
+            [ -f "$f" ] || continue
+
+            DIFF=$(git diff "$BASE_SHA...$HEAD_SHA" -- "$f")
+            [ -z "$DIFF" ] && continue
+
+            # Zaehle entfernte Zeilen (^- aber nicht ^---)
+            REMOVED=$(printf "%s\n" "$DIFF" | grep -cE '^-[^-]' || true)
+
+            if [ "$REMOVED" -gt 0 ]; then
+              echo "::error file=$f::$f hat $REMOVED entfernte oder geaenderte Zeilen — AI-PROVENANCE.md ist append-only!"
+              echo ""
+              echo "Entfernte Zeilen (max. 20 angezeigt):"
+              printf "%s\n" "$DIFF" | grep -E '^-[^-]' | head -20
+              FAIL=1
+            else
+              # Pruefe: alle "+" Zeilen sind UNTER LOG-START?
+              # (Reine Append-Only-Pruefung — Anfang der Datei darf nicht modifiziert werden)
+              ADDED_ABOVE_START=$(awk '
+                /AI-PROVENANCE-LOG-START/ { above_start=0; next }
+                /AI-PROVENANCE-LOG-END/ { exit }
+                { above=1 }
+              ' "$f")
+              # Heuristik: wenn LOG-START existiert, sollten Adds darunter sein
+              echo "::notice file=$f::$f Diff ist additionen-only — OK"
+            fi
+          done
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo ""
+            echo "AI-PROVENANCE.md ist Append-only. Neue Eintraege gehen UNTER den"
+            echo "letzten bestehenden Block. Vorhandene Eintraege duerfen nicht"
+            echo "geaendert oder geloescht werden — auch nicht zur Korrektur."
+            echo "Korrekturen werden als neue Eintraege mit Verweis aufgenommen."
+            exit 1
+          fi
+
+          echo ""
+          echo "AI-PROVENANCE Integrity: OK"

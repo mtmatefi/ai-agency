@@ -7,6 +7,28 @@ Versionierung: [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-05-18
+
+### Hinzugefuegt — Supply Chain + AI-Provenance Integritaet
+- **SECURITY.md** — Threat-Modell (T1 Supply Chain, T2 AI-Provenance-Manipulation,
+  T3 Veralteter Inhalt, T4 Drittanbieter-Actions), Reporting-Pfad.
+- **BRANCH_PROTECTION.md** — Step-by-step Setup fuer GitHub Branch-Protection
+  (UI-Variante + `gh` CLI). Inkl. Pre-Commit-Hook Aktivierung im Zielprojekt
+  (manueller 4-Zeilen-Setup, kein Auto-Installer).
+- **AI-PROVENANCE.md im Repo selbst** — Dogfooding des Provenance-Protokolls
+  fuer das Agency-Repo. Backfill von v1.0 bis v1.6.
+- **.github/workflows/provenance-integrity.yml** — server-side Enforcement
+  dass AI-PROVENANCE.md append-only ist. Blockt PRs die alte Eintraege aendern.
+- **templates/githooks/pre-commit** — client-side Pre-Commit-Hook fuer
+  Zielprojekte (verhindert lokal die Modifikation alter Eintraege).
+- **README.md:** neuer "Sicherer Install"-Abschnitt (git clone + inspect) und
+  "Pin auf Commit-SHA"-Variante (max. Reproduzierbarkeit). Sicherheits-Hinweis
+  beim One-Liner-Install.
+
+### Sicherheit
+- Transparente Offenlegung des `curl | bash`-Patterns im One-Liner-Install
+  (vorher implizit, jetzt explizit als Risiko + Mitigationen dokumentiert).
+
 ## [1.5.0] - 2026-05-18
 
 ### Hinzugefuegt
