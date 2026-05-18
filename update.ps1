@@ -82,7 +82,7 @@ if ($FailCount -gt 0) {
     Write-Host ""
     Write-Host "Hinweis: Pruefe ob der Repo-URL korrekt ist:" -ForegroundColor Yellow
     Write-Host "  Aktuell: $RepoUrl" -ForegroundColor Gray
-    Write-Host "  Aendern: .\update.ps1 -RepoUrl 'https://raw.githubusercontent.com/DEIN-USERNAME/DEIN-REPO/main'" -ForegroundColor Gray
+    Write-Host "  Aendern: .\update.ps1 -RepoUrl 'https://raw.githubusercontent.com/mtmatefi/ai-agency/main'" -ForegroundColor Gray
 }
 
 Write-Host ""

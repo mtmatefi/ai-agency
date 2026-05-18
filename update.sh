@@ -77,6 +77,6 @@ else
     echo ""
     echo "Hinweis: Pruefe ob der Repo-URL korrekt ist:"
     echo "  Aktuell: $REPO_URL"
-    echo "  Aendern: AGENCY_REPO_URL='https://raw.githubusercontent.com/DEIN-USERNAME/DEIN-REPO/main' bash update.sh"
+    echo "  Aendern: AGENCY_REPO_URL='https://raw.githubusercontent.com/mtmatefi/ai-agency/main' bash update.sh"
 fi
 echo ""

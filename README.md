@@ -48,14 +48,31 @@ Du beschreibst was du brauchst. Claude erkennt welche Teams und Personen benoeti
 
 ## Schnellstart
 
-### Neues Projekt einrichten (Windows)
+### Ein-Zeilen-Install (Windows / PowerShell) — empfohlen
+
+In deinem Projekt-Ordner ausfuehren — laedt `update.ps1` von GitHub und startet ihn sofort:
+
+```powershell
+# Laedt alles von GitHub in dein aktuelles Projekt
+Invoke-WebRequest "https://raw.githubusercontent.com/mtmatefi/ai-agency/main/update.ps1" -OutFile update.ps1; .\update.ps1
+```
+
+Danach: Projekt in Cursor / Claude Code oeffnen — `CLAUDE.md` wird automatisch geladen.
+
+### Ein-Zeilen-Install (Mac/Linux)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mtmatefi/ai-agency/main/update.sh -o update.sh && bash update.sh
+```
+
+### Neues Projekt einrichten (Windows, lokale Kopie)
 
 ```powershell
 cd C:\Pfad\zu\deinem\Projekt
 & "C:\Pfad\zu\one-stop-agency\setup-project.ps1"
 ```
 
-### Neues Projekt einrichten (Mac/Linux)
+### Neues Projekt einrichten (Mac/Linux, lokale Kopie)
 
 ```bash
 cd /pfad/zu/deinem/projekt
@@ -160,30 +177,26 @@ Dieses Repository ist der **Single Source of Truth** fuer alle Projekte.
 
 ---
 
-## Konfiguration (erstes Mal)
+## Eigenen Fork verwenden (optional)
 
-Ersetze `DEIN-GITHUB-USERNAME` in den Update-Scripts mit deinem echten GitHub-Username:
+Die Standard-URL in den Scripts zeigt auf `mtmatefi/ai-agency`. Wenn du einen eigenen Fork betreibst, ueberschreibe sie per Parameter / Umgebungsvariable — Scripts selbst musst du nicht editieren:
 
 ```powershell
-# update.ps1 oeffnen und diese Zeile anpassen:
-[string]$RepoUrl = "https://raw.githubusercontent.com/DEIN-USERNAME/one-stop-agency/main"
+# Windows
+.\update.ps1 -RepoUrl "https://raw.githubusercontent.com/DEIN-USERNAME/DEIN-REPO/main"
+```
+
+```powershell
+# Windows: dauerhaft als Umgebungsvariable
+[Environment]::SetEnvironmentVariable("AGENCY_REPO_URL", "https://raw.githubusercontent.com/DEIN-USERNAME/DEIN-REPO/main", "User")
 ```
 
 ```bash
-# update.sh: Umgebungsvariable setzen oder Zeile anpassen:
-REPO_URL="${AGENCY_REPO_URL:-https://raw.githubusercontent.com/DEIN-USERNAME/one-stop-agency/main}"
-```
+# Mac/Linux: einmalig
+AGENCY_REPO_URL="https://raw.githubusercontent.com/DEIN-USERNAME/DEIN-REPO/main" bash update.sh
 
-Alternativ: Umgebungsvariable dauerhaft setzen:
-
-```powershell
-# PowerShell (dauerhaft fuer User)
-[Environment]::SetEnvironmentVariable("AGENCY_REPO_URL", "https://raw.githubusercontent.com/DEIN-USERNAME/one-stop-agency/main", "User")
-```
-
-```bash
-# ~/.zshrc oder ~/.bashrc
-export AGENCY_REPO_URL="https://raw.githubusercontent.com/DEIN-USERNAME/one-stop-agency/main"
+# Mac/Linux: dauerhaft (in ~/.zshrc oder ~/.bashrc)
+export AGENCY_REPO_URL="https://raw.githubusercontent.com/DEIN-USERNAME/DEIN-REPO/main"
 ```
 
 ---
