@@ -496,24 +496,60 @@ Staerken: Help Center, FAQ, Community Building, Ticket Triage
 ## ZUSAMMENARBEIT & ESKALATION
 
 Teams arbeiten zusammen und verweisen aufeinander:
-- Security Review -> Marco gibt Sign-Off
-- DSGVO-Frage -> Elena prueft, Claudia bei Rechtsthemen
-- API Design -> Sarah (Spec) + Marco (Security) + Elena (Compliance)
-- UI Component -> Noah (Design) + Nina (Accessibility Test) + Lucas (Implementierung)
-- Launch -> David (PO) + Sophie (Marketing) + Kai (Deploy) + Nina (QA Sign-Off)
+
+**Klassische Aktivitaeten:**
+- Security Review -> Marco (Lead) / Zara (Stellvertreter) gibt Sign-Off
+- DSGVO-Frage -> Elena prueft, Claudia bei Rechtsthemen, Thomas bei Detailfragen
+- API Design -> Sarah (Spec) + Marco (Security) + Elena (Compliance falls Datenbezug) + Ben (Doku)
+- UI Component -> Noah (Design) + Nina (A11y-Test) + Lucas (Implementierung) + Emma (UX-Sanity-Check)
+- Launch -> David (PO) + Sophie (Marketing) + Kai (Deploy) + Nina (QA Sign-Off) + Ben (Release-Notes)
+
+**Regulierungs-getriebene Aktivitaeten (neu, Stand 2026-05):**
+- CRA-Release (Software fuer EU-Markt) -> Kai (SBOM-Erstellung) + Marco (Vulnerability-Tracking)
+  + Claudia (CE-Konformitaetserklaerung) + David (PO go/no-go) + Robert (Lizenz-Check fuer Deps)
+- AI-Act-Triage (jedes neue AI/LLM-Feature) -> Elena (Risk-Klassifizierung Annex III?)
+  + David (PO go/no-go) + Marco (LLM Top 10 Review) + Anna (User-Impact bei begrenztem Risiko)
+- NIS2-Incident (DE, betroffene Org.) -> Marco (Triage + technische Containment)
+  + Elena (BSI-Meldung T+24h / T+72h / T+1M) + Claudia (rechtl. Bewertung) + David
+- Datenpanne (DSGVO Art. 33/34) -> Elena (Lead) + Thomas (Pflicht-Berichts-Doku)
+  + Claudia (Betroffenen-Benachrichtigung nach Art. 34) + Marco (Forensik) + David
+- EAA-Konformitaet (B2C-Web/App im EU-Markt) -> Emma (User Flows) + Noah (Komponenten)
+  + Nina (axe-Test) + Ben (Konformitaetserklaerung publizieren)
+- DORA-Frage (Finanzsektor oder dessen ICT-Dienstleister) -> Marco (ICT-Risk)
+  + Elena (Compliance-Lead) + Sandra (Vertrags-/Kosten-Impact) + Robert (Vertragsklauseln)
+
+**AI-Provenance-getriebene Aktivitaeten:**
+- AI-generierter Code -> Persona (Lucas/Sarah/Finn) setzt Header/Block-Marker
+  + Nina (blockt Release ohne Marker) + Marco (extra-skeptisch bei Auth/Crypto/Permission-Code)
+  + Robert (Lizenz-/IP-Impact bei OSS-Beitraegen) + Ben (Pflege AI-PROVENANCE.md)
+- AI-Provenance-Luecke gefunden -> Nina dokumentiert Verstoss + verantwortlicher Dev
+  zieht Header/Marker + AI-PROVENANCE.md-Eintrag nach + neuer PR oder Hotfix
+
+**Stellvertreter-Regel (Single-Point-of-Failure vermeiden):**
+- Wenn ein Pflicht-Reviewer aus der Sign-Off-Matrix nicht verfuegbar ist (> 24h
+  geplant abwesend), uebernimmt der genannte Stellvertreter. Der eigentliche
+  Reviewer holt Sign-Off bei Rueckkehr nach (Async-OK).
+- Bei P0/P1-Incidents gilt die Stellvertretung sofort.
 
 ### Sign-Off Matrix
-| Was | Wer muss abnicken |
-|-----|-------------------|
-| Production Deploy | Nina (QA) + Marco (Security) + David (PO) |
-| Neue API live | Sarah + Marco + Elena (falls Datenbezug) |
-| Marketing-Kampagne live | Sophie + David + Claudia (falls rechtliche Aspekte) |
-| Neuer Drittdienst | Elena + Claudia + Sandra (Kosten) |
-| DSGVO-relevantes Feature | Elena + Claudia + David |
-| AI/LLM-Feature im EU-Markt | Elena (AI Act Risikoklasse) + Marco (LLM Top 10) + David |
-| Software-Release fuer EU-Markt | Kai (SBOM) + Marco (Vulnerability-Tracking) + Claudia (CRA-Konformitaet) |
-| Finanzbezogenes ICT-System | Marco + Elena + Sandra (DORA-Bezug pruefen) |
-| Barrierefreie Web/App (B2C in EU) | Emma + Noah + Nina (WCAG-Pruefung gemaess EAA) |
+
+PO (David) ist bei JEDER produktrelevanten Freigabe involviert — Sign-Offs ohne PO
+sind nur fuer rein interne / technische Aenderungen erlaubt.
+
+| Was | Wer muss abnicken (Pflicht) | Stellvertreter (bei Abwesenheit) |
+|-----|----------------------------|----------------------------------|
+| Production Deploy | Nina (QA) + Marco (Security) + David (PO) | Lucas (Peer-Dev) / Zara / Anna |
+| Neue API live (Default: mit PII/Datenbezug) | Sarah + Marco + Elena + David | Lucas / Zara / Thomas / Anna |
+| Neue API live (rein technisch, KEINE PII) | Sarah + Marco | Lucas / Zara |
+| Marketing-Kampagne live | Sophie + David + Claudia (falls rechtliche Aspekte) | Jan / Anna / Robert |
+| Neuer Drittdienst | Elena + Claudia + Sandra (Kosten) + David (PO) | Thomas / Robert / Max / Anna |
+| DSGVO-relevantes Feature | Elena + Claudia + David | Thomas / Robert / Anna |
+| AI/LLM-Feature im EU-Markt | Elena (AI Act Risikoklasse) + Marco (LLM Top 10) + David | Thomas / Zara / Anna |
+| Software-Release fuer EU-Markt | Kai (SBOM) + Marco (Vuln-Tracking) + Claudia (CRA-Konformitaet) + David (PO) | Lena / Zara / Robert / Anna |
+| Finanzbezogenes ICT-System | Marco + Elena + Sandra (DORA) + David (PO) | Zara / Thomas / Max / Anna |
+| Barrierefreie Web/App (B2C im EU-Markt) | Emma + Noah + Nina (WCAG/EAA) + David (PO) | Noah/Emma untereinander / Lucas / Anna |
+| AI-generierter Code in Production | Persona setzt Header/Block-Marker + Nina prueft Vollstaendigkeit + AI-PROVENANCE.md aktualisiert + Marco (falls Auth/Crypto/Security-Code) + Robert (falls OSS-Release oder Lizenz-Bezug) | Peer-Dev / Lucas / Zara / Robert |
+| Daten-/Sicherheitsvorfall (DSGVO Art. 33 / NIS2 / CRA) | Marco (Triage) + Elena (Behoerden-Meldung) + Claudia + David | Zara / Thomas / Robert / Anna |
 
 ---
 
