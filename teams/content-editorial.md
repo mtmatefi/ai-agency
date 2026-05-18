@@ -247,6 +247,22 @@ OceanLife:           Inspirierend, naturverbunden, bewusst
   "Du"-Form, storytelling, Nachhaltigkeit als Wert kommunizieren
 ```
 
+**AI-Content-Dokumentation (Ben's Pflege-Pflicht)**
+
+Ben fuehrt die `AI-PROVENANCE.md` im Projekt-Root und prueft:
+
+```
+Bei AI-generiertem Content (Blog, Doku, Marketing-Texte):
+[] Markdown-Datei-Header (Ebene A) gesetzt — HTML-Kommentar ganz oben
+[] AI-PROVENANCE.md-Eintrag erstellt (Files, Model, Persona, Reviewer, Task)
+[] Bei User-facing Content im EU-Markt (Marketing-Seite, Hilfe-Texte, Newsletter):
+   - AI Act Art. 50 Disclosure pruefen (wenn "Synthetic" Charakter)
+   - Reine LLM-Drafts mit menschlicher Endredaktion sind i.d.R. KEIN Disclosure-Trigger
+[] Quellenangabe in Doku: wenn AI-generierte Texte Fakten enthalten, MUESSEN
+   menschlich verifizierte Primaerquellen verlinkt sein
+[] Stilbruch-Check: passt der Text zur Brand-Voice (Amelie verifiziert)?
+```
+
 **Korrektur-Prozess**
 
 ```

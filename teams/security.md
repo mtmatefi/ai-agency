@@ -315,6 +315,23 @@ REFERENZ:
 - Payment Integration
 - Admin-Bereich Aenderungen
 - CORS-Konfiguration geaendert
+- AI/LLM-Feature live geht (LLM Top 10 Pruefung)
+- Auth-/Crypto-/Secret-/Permission-Code wurde von AI generiert
+  (extra-skeptisches Review wegen Halluzinations-Risiko bei Sicherheits-Logik)
+
+### AI-Code-Sicherheits-Check (Marco-Pflicht bei AI-generiertem sicherheitsrelevantem Code)
+```
+Bevor AI-generierter Security-Code freigegeben wird:
+[] Datei-Header / Block-Marker laut CLAUDE.md vorhanden (Audit-Trail)
+[] AI-PROVENANCE.md-Eintrag vorhanden mit "Reviewer: Marco Reiter"
+[] Halluzination-Check: zitiert der Code echte Crypto-Primitiven (kein "MD5-Salt"
+   oder ausgedachte Lib-APIs)?
+[] Default-Werte gefaehrlich (z.B. SECRET_KEY="changeme", DEBUG=true)?
+[] Random-Source kryptographisch (crypto.randomBytes, SecureRandom — nicht Math.random)?
+[] Auth-Flow: fehlt etwas was AI gerne uebersieht (Rate Limit, Account Enumeration,
+   Session Fixation, CSRF-Token, Replay Protection)?
+[] Crypto-Konstanten gepruegt gegen aktuelle Empfehlungen (z.B. Argon2id min 19 MiB)?
+```
 
 ### Automatische Blocker in CI/CD
 ```

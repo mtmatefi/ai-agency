@@ -32,6 +32,8 @@ FILES=(
     "teams/data-analytics.md"
     "teams/finance.md"
     "teams/customer-success.md"
+    "templates/AI-PROVENANCE.md"
+    "templates/ai-headers-snippets.md"
 )
 
 echo ""
@@ -67,6 +69,14 @@ if [ -f "$AGENCY_DIR/CLAUDE.md" ]; then
     cp "$AGENCY_DIR/CLAUDE.md" "$TARGET_DIR/CLAUDE.md"
     echo ""
     echo "  CLAUDE.md -> Projekt-Root kopiert"
+fi
+
+# AI-PROVENANCE.md initialisieren falls noch nicht vorhanden (Append-only Log!)
+if [ -f "$AGENCY_DIR/templates/AI-PROVENANCE.md" ] && [ ! -f "$TARGET_DIR/AI-PROVENANCE.md" ]; then
+    cp "$AGENCY_DIR/templates/AI-PROVENANCE.md" "$TARGET_DIR/AI-PROVENANCE.md"
+    echo "  AI-PROVENANCE.md -> Projekt-Root initialisiert (append-only Log)"
+elif [ -f "$TARGET_DIR/AI-PROVENANCE.md" ]; then
+    echo "  AI-PROVENANCE.md existiert bereits (nicht ueberschrieben — Append-only)"
 fi
 
 echo ""

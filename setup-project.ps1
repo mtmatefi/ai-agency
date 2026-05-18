@@ -35,6 +35,21 @@ if ($AgencyPath -ne "" -and (Test-Path $AgencyPath)) {
     New-Item -ItemType Directory -Path "$ProjectDir\.agency\teams" -Force | Out-Null
     Copy-Item "$AgencyPath\teams\*.md" "$ProjectDir\.agency\teams\" -Force
     Write-Host "  OK  teams/ (alle 14 Team-Dateien)" -ForegroundColor Green
+
+    # Templates-Ordner (AI-Provenance + Snippets)
+    if (Test-Path "$AgencyPath\templates") {
+        New-Item -ItemType Directory -Path "$ProjectDir\.agency\templates" -Force | Out-Null
+        Copy-Item "$AgencyPath\templates\*.md" "$ProjectDir\.agency\templates\" -Force
+        Write-Host "  OK  templates/" -ForegroundColor Green
+
+        # AI-PROVENANCE.md ins Projekt-Root initialisieren (nur wenn nicht vorhanden — Append-only!)
+        if (-not (Test-Path "$ProjectDir\AI-PROVENANCE.md")) {
+            Copy-Item "$AgencyPath\templates\AI-PROVENANCE.md" "$ProjectDir\AI-PROVENANCE.md" -Force
+            Write-Host "  OK  AI-PROVENANCE.md (initialisiert in Projekt-Root)" -ForegroundColor Green
+        } else {
+            Write-Host "  OK  AI-PROVENANCE.md existiert bereits (Append-only — nicht ueberschrieben)" -ForegroundColor Gray
+        }
+    }
 }
 # Option B: Von GitHub laden
 else {

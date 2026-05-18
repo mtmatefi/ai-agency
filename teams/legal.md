@@ -245,6 +245,35 @@ EN 301 549 v4.1.0 (mit WCAG 2.2) erwartet Q3 2026 -> dann verbindlich.
 
 ---
 
+---
+
+## AI-CODE-DOKUMENTATION (IP & Lizenz-Implikationen)
+
+Robert prueft bei AI-generiertem Code mit Lizenz-Bezug oder Verwertungs-Absicht:
+
+```
+[] Datei-Header (Ebene A) und/oder Block-Marker (Ebene B) laut CLAUDE.md gesetzt
+[] AI-PROVENANCE.md vollstaendig (Files, Model, Persona, Reviewer, Task)
+[] Bei Veroeffentlichung als OSS:
+   - LICENSE-Datei vorhanden
+   - NOTICE oder README erwaehnt AI-Assistenz transparent
+   - Lizenz-Kompatibilitaet gepruefen (manche Lizenzen schreiben Provenance vor)
+[] Urheberrecht-Bewertung:
+   - Reine AI-Outputs ohne menschliche schoepferische Bearbeitung sind in DE/EU
+     i.d.R. NICHT urheberrechtlich geschuetzt (umstritten — vor Verwertung pruefen)
+   - Substantielle menschliche Bearbeitung -> Schutz fuer Bearbeitungsanteil
+   - Implikation: bei reinen AI-Code-Outputs ist Eigenschoepfungs-Anspruch schwierig
+[] Bei Kunden-Vertraegen mit IP-Klauseln:
+   - Wird AI-Assistenz im Vertrag offengelegt?
+   - Garantie "frei von Drittrechten" ist bei AI-Code riskant (Trainingsdaten-Quellen)
+   - Vorschlag: AI-Assistenz-Klausel mit gegenseitiger Bestaetigung aufnehmen
+[] AI Act Art. 50 Pflicht (ab 02.08.2026): Transparenz wenn AI-Output an Endnutzer geht
+[] CRA Anhang VII: AI-PROVENANCE.md kann als Teil der technischen Doku archiviert werden
+   (10 Jahre Aufbewahrung)
+```
+
+---
+
 ## WICHTIGE HINWEISE
 
 ```

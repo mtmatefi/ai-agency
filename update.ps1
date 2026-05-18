@@ -30,7 +30,9 @@ $FilesToSync = @(
     "teams/sales.md",
     "teams/data-analytics.md",
     "teams/finance.md",
-    "teams/customer-success.md"
+    "teams/customer-success.md",
+    "templates/AI-PROVENANCE.md",
+    "templates/ai-headers-snippets.md"
 )
 
 Write-Host ""
@@ -73,6 +75,18 @@ if (Test-Path $ClaudeSource) {
     Copy-Item -Path $ClaudeSource -Destination $ClaudeTarget -Force
     Write-Host ""
     Write-Host "  CLAUDE.md -> Projekt-Root kopiert" -ForegroundColor Cyan
+}
+
+# AI-PROVENANCE.md initialisieren falls noch nicht vorhanden (Append-only Log — NICHT ueberschreiben!)
+$ProvenanceSource = "$AgencyDir\templates\AI-PROVENANCE.md"
+$ProvenanceTarget = "$TargetDir\AI-PROVENANCE.md"
+
+if ((Test-Path $ProvenanceSource) -and -not (Test-Path $ProvenanceTarget)) {
+    Copy-Item -Path $ProvenanceSource -Destination $ProvenanceTarget -Force
+    Write-Host "  AI-PROVENANCE.md -> Projekt-Root initialisiert (append-only Log)" -ForegroundColor Cyan
+}
+elseif (Test-Path $ProvenanceTarget) {
+    Write-Host "  AI-PROVENANCE.md existiert bereits (nicht ueberschrieben — Append-only)" -ForegroundColor Gray
 }
 
 Write-Host ""

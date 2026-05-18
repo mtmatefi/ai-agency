@@ -45,6 +45,9 @@ Du beschreibst was du brauchst. Claude erkennt welche Teams und Personen benoeti
 - **Deploy:** Kein Production-Deploy ohne QA + Security + PO Sign-Off
 - **Supply Chain:** SBOM (CycloneDX/SPDX) Pflicht ab 11.09.2026 (EU CRA), Sigstore/Cosign-Signing
 - **EU-Regulierung:** Tracker fuer NIS2 (DE) · EU AI Act (voll ab 02.08.2026) · CRA · DORA · Data Act · EAA
+- **AI-Provenance:** Pflicht-Dokumentation jeder AI-generierten Code-/Content-Aenderung
+  (Datei-Header, Block-Marker, `AI-PROVENANCE.md` Log) — siehe `CLAUDE.md` Abschnitt
+  "AI-CODE-DOKUMENTATIONS-PROTOKOLL"
 
 **Recherche-Pflicht:** LLM-Wissen ist Monate veraltet. Jede Persona MUSS Standards,
 CVE-Status, Framework-Versionen und Gesetzes-Stand vor Empfehlung per WebSearch
@@ -151,6 +154,9 @@ one-stop-agency/
     auto-update.yml      <- Woechtentliches Self-Update (Datums-Stempel + Versions-Snapshot)
   data/
     versions.snapshot.json <- Auto-generierter Versions-Snapshot (von endoflife.date)
+  templates/
+    AI-PROVENANCE.md     <- Append-only Log-Template (wird im Zielprojekt initialisiert)
+    ai-headers-snippets.md <- Datei-Header + Block-Marker Snippets pro Sprache
   update.ps1             <- Update-Script Windows
   update.sh              <- Update-Script Mac/Linux
   setup-project.ps1      <- Einmal-Setup Windows
@@ -163,11 +169,60 @@ Im Projekt nach dem Setup:
 ```
 dein-projekt/
   CLAUDE.md              <- Automatisch geladen von Claude
+  AI-PROVENANCE.md       <- Append-only Audit-Log (NICHT in .gitignore — Teil der Doku!)
   .agency/               <- Wird von .gitignore ausgeschlossen
     CLAUDE.md            <- Backup
     teams/               <- Alle Team-Dateien
+    templates/           <- AI-Provenance-Template + Snippets pro Sprache
   ...                    <- Dein eigentlicher Projekt-Code
 ```
+
+---
+
+## AI-Provenance — Pflicht-Dokumentation aller AI-generierten Aenderungen
+
+Damit fuer jedes Stueck Code/Content jederzeit klar ist **was AI gemacht hat und was
+es macht**, gilt im Projekt die Pflicht laut `CLAUDE.md` -> "AI-CODE-DOKUMENTATIONS-PROTOKOLL":
+
+**Ebene A — Datei-Header** (bei NEUEN Dateien mit substantieller AI-Generierung):
+
+```typescript
+/**
+ * <1-Satz-Zweck der Datei>
+ *
+ * @ai-assisted: claude-opus-4-7 via One-Stop-Agency / <Persona>
+ * @ai-date: 2026-05-18
+ * @ai-task: <kurze Beschreibung>
+ * @human-review: <Name oder OFFEN>, <Datum oder OFFEN>
+ */
+```
+
+**Ebene B — Block-Marker** (bei AI-Sektionen innerhalb existierender Dateien):
+
+```
+// @ai-block:start (claude-opus-4-7 / <Persona>, 2026-05-18)
+// purpose: <was tut der Block>
+... AI-generierter Code ...
+// @ai-block:end
+```
+
+**Ebene C — `AI-PROVENANCE.md`** (Append-only Log im Projekt-Root):
+
+Wird beim `setup-project`/`update`-Lauf automatisch im Projekt-Root angelegt, falls noch nicht vorhanden.
+Pro Session/PR wird ein neuer Eintrag angefuegt mit Files, Model, Persona, Reviewer, Task, Notes.
+
+**Ebene D — Commit/PR**: `Co-Authored-By: Claude...` + PR-Abschnitt "AI Assistance"
+(was AI-generiert vs. Mensch-geschrieben, Reviewer).
+
+**Snippets pro Sprache:** `templates/ai-headers-snippets.md` (in `.agency/templates/` nach Setup)
+mit Vorlagen fuer TS/JS, PHP, Kotlin, Python, YAML, JSON, SQL, Markdown, Shell.
+
+Wer prueft was: Dev-Team setzt Marker, QA (Nina) blockt Release ohne Marker,
+Security (Marco) reviewt AI-generierten Security-Code extra-skeptisch, Legal (Robert)
+prueft IP-/Lizenz-Implikationen, Content (Ben) pflegt das Log.
+
+**Regulatorischer Hintergrund:** Diese Doku stuetzt EU AI Act (Art. 13, 16, 50),
+CRA (technische Doku, 10 Jahre Aufbewahrung) und ISO 27001:2022 Asset-Management.
 
 ---
 

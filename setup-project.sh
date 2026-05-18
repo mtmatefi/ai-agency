@@ -36,6 +36,21 @@ if [ -n "$AGENCY_LOCAL_PATH" ] && [ -d "$AGENCY_LOCAL_PATH" ]; then
     cp "$AGENCY_LOCAL_PATH/teams/"*.md "$PROJECT_DIR/.agency/teams/"
     echo "  OK  teams/ (alle 14 Team-Dateien)"
 
+    # Templates-Ordner (AI-Provenance + Snippets)
+    if [ -d "$AGENCY_LOCAL_PATH/templates" ]; then
+        mkdir -p "$PROJECT_DIR/.agency/templates"
+        cp "$AGENCY_LOCAL_PATH/templates/"*.md "$PROJECT_DIR/.agency/templates/"
+        echo "  OK  templates/"
+
+        # AI-PROVENANCE.md ins Projekt-Root initialisieren (nur wenn nicht vorhanden!)
+        if [ ! -f "$PROJECT_DIR/AI-PROVENANCE.md" ]; then
+            cp "$AGENCY_LOCAL_PATH/templates/AI-PROVENANCE.md" "$PROJECT_DIR/AI-PROVENANCE.md"
+            echo "  OK  AI-PROVENANCE.md (initialisiert in Projekt-Root)"
+        else
+            echo "  OK  AI-PROVENANCE.md existiert bereits (Append-only — nicht ueberschrieben)"
+        fi
+    fi
+
 # Option B: Von GitHub laden
 else
     echo "Modus: Download von GitHub ($REPO_URL)"

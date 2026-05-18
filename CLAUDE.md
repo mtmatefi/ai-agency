@@ -36,6 +36,138 @@ Standard-Version) immer Quelle mit URL und Datum angeben — nicht aus dem Gedae
 
 ---
 
+## AI-CODE-DOKUMENTATIONS-PROTOKOLL (PFLICHT, nicht verhandelbar)
+
+JEDER Code oder Content der durch mich (Claude / One-Stop-Agency) erzeugt oder
+substantiell veraendert wird, MUSS dokumentiert sein. Drei Pflicht-Ebenen:
+
+### Ebene A — Datei-Header (bei NEUEN Dateien mit substantieller AI-Generierung)
+
+In der ersten Block-Kommentar-Zeile der Datei:
+
+```
+/**
+ * <1-Satz-Zweck der Datei>
+ *
+ * @ai-assisted: claude-opus-4-7 via One-Stop-Agency / <Persona> (z.B. "Lucas Keller")
+ * @ai-date: YYYY-MM-DD
+ * @ai-task: <kurze Beschreibung der Aufgabe>
+ * @human-review: <Name oder OFFEN>, <Datum oder OFFEN>
+ */
+```
+
+Sprach-spezifische Varianten:
+- TS/JS:          `/** ... */`
+- PHP:            `/** ... */`
+- Kotlin/Java:    `/** ... */`
+- Python:         `"""..."""`-Docstring oder `# @ai-assisted: ...` Header
+- YAML/JSON/SQL:  `# @ai-assisted: ...` als oberster Kommentar
+- Markdown:       HTML-Kommentar `<!-- @ai-assisted: ... -->` ganz oben
+
+### Ebene B — Block-Marker (bei substantieller AI-Generierung INNERHALB existierender Dateien)
+
+```
+// @ai-block:start (claude-opus-4-7 / <Persona>, YYYY-MM-DD)
+// purpose: <was tut der Block>
+... AI-generierter Code ...
+// @ai-block:end
+```
+
+Funktionen / Klassen die AI-generiert sind: zusaetzlich JSDoc / PHPDoc / KDoc mit
+- @param fuer jeden Parameter
+- @returns fuer Rueckgabewert
+- @throws fuer moegliche Fehler
+- @sideeffect fuer DB-Writes / API-Calls / File-IO (eigene Konvention — explizit machen)
+
+### Ebene C — Projekt-Log `AI-PROVENANCE.md` (Append-only)
+
+Im Projekt-Root als zentraler Audit-Trail. Format pro Eintrag:
+
+```
+## YYYY-MM-DD — <kurzer Titel>
+
+Files:
+  - path/to/file.ts (NEW, full AI-generated)
+  - path/to/other.ts (MODIFIED, ai-block lines 42-87)
+  - path/to/migration.sql (NEW, ai-generated, manual review by <name>)
+
+Model:    claude-opus-4-7 (1M context)
+Persona:  <Persona-Name> (<Team>) via One-Stop-Agency
+Reviewer: <git user / "OFFEN bis Sign-Off">
+Task:     <Beschreibung der Aufgabe>
+Notes:    <z.B. "Tests separat ergaenzt; Security-Sign-Off durch Marco offen">
+```
+
+Template-Datei: `templates/AI-PROVENANCE.md` (wird durch `setup-project` ins
+Zielprojekt kopiert wenn nicht vorhanden).
+
+### Ebene D — Commit-Message
+
+- `Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>` bleibt Pflicht
+- Commit-Body MUSS angeben: was AI-generiert, was Mensch geschrieben, wer reviewt hat
+- PR-Description: eigener Abschnitt "AI Assistance" (Scope + Reviewer)
+
+### Was NICHT markiert werden muss
+
+- Typo-Fixes / Renames / Auto-Linter-Fixes
+- Triviale Edits (< 5 Zeilen mechanische Aenderung)
+- Komplett von Mensch geschriebener Code (klar — keine Falschanmeldung!)
+
+### Was DOKUMENTIEREN inhaltlich heisst
+
+Nicht nur Provenance, sondern auch **was der Code tut**:
+
+- Funktion: JSDoc/PHPDoc/KDoc mit Zweck, Params, Return, Side-Effects
+- Komplexe Algorithmen: Inline-Kommentar zum **Warum** (nicht Was — Was steht im Code)
+- API: OpenAPI-Spec vor Code (existiert im DoD Development & QA)
+- Module/Service: kurze README.md je Modul (Zweck, Verwendung, Beispiel)
+- Migrations: Header-Kommentar mit Datum, Grund, Rollback-Pfad
+
+### Audit-Trail-Begruendung (regulatorisch)
+
+`AI-PROVENANCE.md` ist Teil der **technischen Dokumentation** und stuetzt:
+- **EU AI Act Art. 50** — Transparenzpflichten bei AI-generierten Inhalten
+- **EU AI Act Art. 13 + 16** — Doku- und Aufzeichnungspflichten fuer Hochrisiko-AI
+- **CRA Anhang VII** — Technische Dokumentation, 10 Jahre Aufbewahrung
+- **ISO 27001:2022 A.8** — Asset Management (Code-Provenance)
+- **Urheberrecht** — Klarstellung Eigenleistung vs. AI-Assistenz fuer Verwertungsrechte
+
+### Wer prueft was
+
+| Persona | Pruef-Pflicht |
+|---------|---------------|
+| Lucas / Sarah / Finn (Dev) | Datei-Header und Block-Marker im EIGENEN Code |
+| Nina (QA) | bei Code-Review: sind ai-markers vorhanden wo noetig? |
+| Marco (Security) | bei AI-generiertem Auth/Crypto-Code: extra-skeptisch reviewen |
+| Robert (Legal) | bei OSS-Beitraegen: AI-Anteil und Lizenz-Implikationen klaeren |
+| Ben (Tech Writer) | AI-PROVENANCE.md Pflege + Konsistenz der Doku |
+
+### Trockenlauf (Beispiel)
+
+```typescript
+/**
+ * Exportiert alle personenbezogenen Daten eines Users als JSON (DSGVO Art. 15).
+ *
+ * @ai-assisted: claude-opus-4-7 via One-Stop-Agency / Sarah Wagner
+ * @ai-date: 2026-05-18
+ * @ai-task: GDPR Auskunfts-Export endpoint
+ * @human-review: OFFEN bis Sign-Off durch Marco (Security) + Elena (Compliance)
+ */
+import { Request, Response } from 'express'
+
+export async function exportUserData(req: Request, res: Response) {
+  // @ai-block:start (claude-opus-4-7 / Sarah, 2026-05-18)
+  // purpose: Sammelt User-PII aus allen relevanten Tabellen, redacted Secrets,
+  //          sendet als download. Side-effect: schreibt audit_log Eintrag.
+  const userId = req.user.id
+  const profile = await db.users.findUnique({ where: { id: userId } })
+  // ... weiterer Code ...
+  // @ai-block:end
+}
+```
+
+---
+
 ## TEAM-ROUTING - Automatische Erkennung
 
 ### Routing-Regeln (mehrere Teams gleichzeitig moeglich)
@@ -420,6 +552,10 @@ Dieses Repository updated sich auf drei Ebenen automatisch:
 3. **Freshness-Check zur Laufzeit (Claude):** Beim ersten Lesen dieser Datei pruefe
    ich den Commit-Zeitstempel (`git log -1 --format=%cI CLAUDE.md`). Wenn aelter als
    30 Tage: Warnung an User mit Empfehlung `update.ps1`/`update.sh` auszufuehren.
+
+4. **AI-Provenance-Pflicht:** Bei jeder Code-/Content-Erzeugung wird automatisch das
+   AI-CODE-DOKUMENTATIONS-PROTOKOLL (siehe oben) angewandt. Pflicht-Eintrag in
+   `AI-PROVENANCE.md` im Zielprojekt nach jeder Session.
 
 ---
 

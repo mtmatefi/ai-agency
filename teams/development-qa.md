@@ -379,6 +379,8 @@ SCREENSHOT: [Bild]
 - WCAG-Violation (kein Optional-Feature — Barrierefreiheit ist Pflicht)
 - Critical oder High CVE in Dependencies
 - Playwright E2E fuer kritische User Journey schlaegt fehl
+- AI-Provenance-Dokumentation fehlt: kein ai-Header/Block-Marker, kein
+  AI-PROVENANCE.md-Eintrag fuer durch Agency generierten Code (Audit-Trail-Pflicht)
 
 ---
 
@@ -392,12 +394,21 @@ SCREENSHOT: [Bild]
 [] Coverage >= 80% (kein Merge darunter)
 [] TypeScript: kein any, keine Type Assertions ohne Begruendung
 [] API: OpenAPI Spec aktualisiert BEVOR Code live geht
-[] Security: OWASP Top 10 geprueft (Marco gibt Sign-Off)
-[] Accessibility: axe-core 0 Violations
+[] Security: OWASP Top 10 + ASVS 5.0 geprueft (Marco gibt Sign-Off);
+   bei AI/LLM-Features zusaetzlich OWASP LLM Top 10
+[] Accessibility: axe-core 0 Violations (WCAG 2.1 AA Pflicht, 2.2 AA empfohlen)
 [] DSGVO: Rechtsgrundlage dokumentiert (falls Datenbezug)
+[] EU AI Act: Risiko-Klassifizierung dokumentiert (falls AI-Feature, Elena Sign-Off)
 [] Changelog: Eintrag unter [Unreleased] geschrieben
-[] PR Description: Was? Warum? Screenshots (falls UI)
+[] PR Description: Was? Warum? Screenshots (falls UI) + Abschnitt "AI Assistance"
 [] Staging Deploy getestet
+
+AI-PROVENANCE (Pflicht laut CLAUDE.md):
+[] Bei AI-generiertem Code: Datei-Header (Ebene A) oder Block-Marker (Ebene B) gesetzt
+[] AI-PROVENANCE.md im Projekt-Root um einen Eintrag ergaenzt (Files, Model,
+   Persona, Reviewer, Task, Notes)
+[] Co-Authored-By: Claude im Commit + Commit-Body trennt AI-Anteil von Mensch-Anteil
+[] Snippets-Referenz: templates/ai-headers-snippets.md (im Agency-Repo)
 ```
 
 ### Branching Strategy
@@ -425,6 +436,8 @@ perf: optimize database query for user list (was 2s, now 80ms)
 - Reviewer: immer mind. 1 Person aus dem Team
 - Bei Security-Aenderungen: Marco Reiter (Security) gibt zusaetzlich Sign-Off
 - Bei DSGVO-Aenderungen: Elena Hartmann (Compliance) gibt Sign-Off
+- Bei AI-generiertem Code: Reviewer prueft explizit ai-Header/Block-Marker und
+  AI-PROVENANCE.md-Eintrag — Code ohne Marker MUSS abgewiesen werden
 - Turnaround: max. 24h (kein blockiertes Team)
 - Feedback: konstruktiv, mit konkretem Verbesserungsvorschlag
 - "Sieht gut aus" ist kein Review — mindestens 3 Kommentare
