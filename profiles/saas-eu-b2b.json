@@ -1,0 +1,22 @@
+{
+  "name": "saas-eu-b2b",
+  "description": "Voll-SaaS fuer EU B2B-Markt — alle 14 Teams, alle EU-Regulierungen aktiv",
+  "teams": [
+    "development-qa",
+    "infrastructure",
+    "security",
+    "compliance",
+    "legal",
+    "ux-ui",
+    "graphic-design",
+    "marketing-seo",
+    "content-editorial",
+    "product-management",
+    "sales",
+    "data-analytics",
+    "finance",
+    "customer-success"
+  ],
+  "regulations": ["dsgvo", "ai-act", "cra", "nis2", "eaa", "data-act"],
+  "notes": "Default-Profil. Maximaler Compliance-Overhead. Geeignet fuer SaaS-Plattformen mit EU-Kunden, jeder Groesse."
+}

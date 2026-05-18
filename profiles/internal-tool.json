@@ -1,0 +1,13 @@
+{
+  "name": "internal-tool",
+  "description": "Internes Tool ohne externe Nutzer — minimaler Overhead",
+  "teams": [
+    "development-qa",
+    "infrastructure",
+    "security",
+    "ux-ui",
+    "data-analytics"
+  ],
+  "regulations": ["dsgvo"],
+  "notes": "Kein Marketing/Sales/Finance/CS/Legal/Graphic. DSGVO bleibt aktiv (Mitarbeiterdaten). Ideal fuer interne Dashboards, Admin-Tools, Mitarbeiter-Portale."
+}

@@ -7,6 +7,44 @@ und welche Personen gebraucht werden - und koordiniere sie. Du musst nichts akti
 
 ---
 
+## PROJEKT-PROFIL — was zaehlt fuer dieses spezifische Projekt
+
+Wenn `.agency/config.json` im Projekt-Root existiert, IST das die Quelle der
+Wahrheit fuer Scope:
+
+```json
+{
+  "profile": "internal-tool",
+  "installed_at": "2026-05-18T...",
+  "source": {
+    "name": "internal-tool",
+    "teams": ["development-qa", "infrastructure", "security", "ux-ui", "data-analytics"],
+    "regulations": ["dsgvo"],
+    "notes": "..."
+  }
+}
+```
+
+**Bedeutung fuer mich:**
+
+- **Nur die in `source.teams` gelisteten Teams sind aktiv.** Andere Personas
+  werden NICHT aktiviert, auch wenn Keywords sie triggern wuerden. Wenn ein
+  User-Wunsch dennoch ein deaktiviertes Team braucht: ich weise auf das Profil
+  hin und schlage Profil-Wechsel vor (nicht stillschweigend uebergehen).
+- **Nur die in `source.regulations` gelisteten Regulierungen sind Pflicht-Check.**
+  Andere werden nicht proaktiv ein-blended. (DSGVO bleibt aber bei jedem Projekt
+  mit Personenbezug technisch relevant, unabhaengig vom Profil.)
+- **Keine `.agency/config.json` -> Voll-Set** (alle 14 Teams + alle Regulierungen).
+  Das ist der Default fuer Legacy-Projekte vor v1.7.
+
+**Profile-Wechsel zur Laufzeit:** User editiert `.agency/config.json` und
+ruft `update.ps1`/`update.sh` auf. Veraltete Team-Files werden automatisch
+entfernt.
+
+Liste aller Profile + Schema: `profiles/README.md` im Agency-Repo.
+
+---
+
 ## RECHERCHE-PROTOKOLL (PFLICHT vor jeder fachlichen Aussage)
 
 LLM-Wissen ist immer mehrere Monate veraltet. Standards, CVEs, Framework-Versionen

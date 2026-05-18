@@ -7,6 +7,27 @@ Versionierung: [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-05-18
+
+### Hinzugefuegt — Projekt-Profile (Slim-Mode-Setup)
+- **profiles/** Verzeichnis mit 5 vordefinierten Profilen + eigenem README:
+  - `saas-eu-b2b` — alle 14 Teams + alle EU-Regulierungen (Default)
+  - `internal-tool` — 5 Teams + DSGVO
+  - `mobile-app-only` — 7 Teams + DSGVO/AI Act/EAA
+  - `agency-client-work` — 11 Teams (ohne Marketing/CS) + 4 EU-Regulierungen
+  - `oss-library` — 5 Teams + CRA
+- **setup-project.ps1/.sh:** Neue Option `-Profile`/`--profile`.
+  Interaktive Auswahl wenn nicht gegeben + TTY. Schreibt `.agency/config.json`
+  ins Zielprojekt.
+- **update.ps1/.sh:** Lesen `.agency/config.json`. Filtern Team-Files nach Profil
+  (CLAUDE.md + Templates immer komplett). Entfernen ueberfluessige Team-Files
+  bei Profil-Wechsel.
+- **CLAUDE.md:** Neuer Abschnitt "PROJEKT-PROFIL" — Anweisung an Claude,
+  `.agency/config.json` zu lesen und deaktivierte Teams nicht stillschweigend
+  zu uebergehen, sondern auf Profil hinzuweisen.
+- **scripts/validate.sh:** Erweitert um Profile-Check + workflow-Check
+  (provenance-integrity.yml jetzt Pflicht).
+
 ## [1.6.0] - 2026-05-18
 
 ### Hinzugefuegt — Supply Chain + AI-Provenance Integritaet

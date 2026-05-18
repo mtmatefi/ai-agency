@@ -237,6 +237,40 @@ dein-projekt/
 
 ---
 
+## Projekt-Profile — nicht jedes Projekt braucht alle 14 Teams
+
+Beim `setup-project` wird ein Profil gewaehlt (Default `saas-eu-b2b`).
+Es bestimmt welche Teams aktiv sind und welche EU-Regulierungen Pflicht-Check sind:
+
+| Profil | Teams | Regulierungen | Use-Case |
+|--------|-------|---------------|----------|
+| `saas-eu-b2b` | alle 14 | DSGVO, AI Act, CRA, NIS2, EAA, Data Act | Voll-SaaS, EU-B2B-Markt |
+| `internal-tool` | 5 | DSGVO | Interne Tools, Admin-Portale |
+| `mobile-app-only` | 7 | DSGVO, AI Act, EAA | Mobile-App-Projekt |
+| `agency-client-work` | 11 | DSGVO, AI Act, CRA, EAA | Agentur fuer wechselnde Kunden |
+| `oss-library` | 5 | CRA | OSS-Library / SDK |
+
+**Verwendung:**
+```bash
+# Beim Setup (interaktive Auswahl oder via Flag)
+bash setup-project.sh --profile internal-tool
+
+# Windows
+.\setup-project.ps1 -Profile internal-tool
+```
+
+Schreibt `.agency/config.json` ins Projekt. Bei jedem `update.{ps1,sh}`
+werden nur die Team-Files der aktiven Teams gesynct (ueberfluessige
+Files werden automatisch entfernt).
+
+**Profil-Wechsel zur Laufzeit:** `.agency/config.json` editieren und
+`update.ps1`/`update.sh` ausfuehren.
+
+**Eigene Profile:** in `profiles/dein-name.json` mit gleichem Schema — siehe
+`profiles/README.md`.
+
+---
+
 ## AI-Provenance — Pflicht-Dokumentation aller AI-generierten Aenderungen
 
 Damit fuer jedes Stueck Code/Content jederzeit klar ist **was AI gemacht hat und was

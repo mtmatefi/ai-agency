@@ -39,6 +39,23 @@ Write-Host ""
 Write-Host "One Stop Agency — Update" -ForegroundColor Cyan
 Write-Host "========================" -ForegroundColor Cyan
 Write-Host "Ziel: $TargetDir" -ForegroundColor Gray
+
+# Profil aus .agency/config.json lesen (falls vorhanden)
+$ActiveTeams = $null
+$ProfileName = ""
+$ConfigPath = "$TargetDir\.agency\config.json"
+if (Test-Path $ConfigPath) {
+    try {
+        $Config = Get-Content $ConfigPath -Raw | ConvertFrom-Json
+        $ProfileName = $Config.profile
+        if ($Config.source -and $Config.source.teams) {
+            $ActiveTeams = @($Config.source.teams)
+            Write-Host "Profil: $ProfileName (Teams aktiv: $($ActiveTeams.Count)/14)" -ForegroundColor Gray
+        }
+    } catch {
+        Write-Host "WARN: .agency/config.json konnte nicht gelesen werden — alle Teams werden synced." -ForegroundColor Yellow
+    }
+}
 Write-Host ""
 
 # Verzeichnisstruktur anlegen
@@ -47,7 +64,21 @@ New-Item -ItemType Directory -Path "$AgencyDir\teams" -Force | Out-Null
 $SuccessCount = 0
 $FailCount = 0
 
+$SkipCount = 0
 foreach ($File in $FilesToSync) {
+    # Profile-Filter: nur Team-Files filtern, CLAUDE.md + Templates immer syncen
+    if ($ActiveTeams -and $File -like "teams/*") {
+        $TeamName = ($File -replace "^teams/", "") -replace "\.md$", ""
+        if ($TeamName -notin $ActiveTeams) {
+            Write-Host "  SKIP $File (nicht in Profil '$ProfileName')" -ForegroundColor DarkGray
+            # Eventuell vorhandene alte Datei entfernen
+            $StaleLocal = "$AgencyDir\$File"
+            if (Test-Path $StaleLocal) { Remove-Item $StaleLocal -Force }
+            $SkipCount++
+            continue
+        }
+    }
+
     $Url = "$RepoUrl/$File"
     $LocalPath = "$AgencyDir\$File"
 
@@ -90,7 +121,7 @@ elseif (Test-Path $ProvenanceTarget) {
 }
 
 Write-Host ""
-Write-Host "Update abgeschlossen: $SuccessCount erfolgreich, $FailCount Fehler" -ForegroundColor $(if ($FailCount -eq 0) { "Green" } else { "Yellow" })
+Write-Host ("Update abgeschlossen: {0} erfolgreich, {1} skipped (Profil), {2} Fehler" -f $SuccessCount, $SkipCount, $FailCount) -ForegroundColor $(if ($FailCount -eq 0) { "Green" } else { "Yellow" })
 
 if ($FailCount -gt 0) {
     Write-Host ""

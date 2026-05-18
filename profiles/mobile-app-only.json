@@ -1,0 +1,15 @@
+{
+  "name": "mobile-app-only",
+  "description": "Mobile-App-Projekt (Android/Kotlin/Compose, optional iOS via Compose Multiplatform)",
+  "teams": [
+    "development-qa",
+    "infrastructure",
+    "security",
+    "compliance",
+    "ux-ui",
+    "data-analytics",
+    "customer-success"
+  ],
+  "regulations": ["dsgvo", "ai-act", "eaa"],
+  "notes": "Ohne Marketing-/Sales-/Finance-/Legal-Schwerpunkt. EAA-Compliance fuer App-Stores in EU. Compose Multiplatform 1.10 wenn iOS auch geshared wird."
+}

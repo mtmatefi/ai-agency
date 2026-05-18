@@ -1,0 +1,13 @@
+{
+  "name": "oss-library",
+  "description": "Open-Source-Library / SDK publisher",
+  "teams": [
+    "development-qa",
+    "infrastructure",
+    "security",
+    "legal",
+    "content-editorial"
+  ],
+  "regulations": ["cra"],
+  "notes": "Legal-Lead Robert fuer Lizenz-Pflege (SPDX, FOSS-Compliance), Content-Lead Ben fuer Doku, Marco fuer Security-Reviews. CRA-Pflicht bei EU-Markt-Releases (SBOM, Vulnerability-Disclosure)."
+}

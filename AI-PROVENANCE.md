@@ -175,6 +175,37 @@ Notes:    Klassifikator-Sperre beim Auto-Installer `scripts/install-githooks.sh`
           stattdessen manueller 4-Zeilen-Setup in BRANCH_PROTECTION.md dokumentiert.
           Diese Loesung ist transparenter und vom User explizit angefragt
           ("mach alle davon").
+Commit:   dd52bb0
+
+## 2026-05-18 — v1.7.0 Projekt-Profile (Slim-Mode-Setup)
+
+Files:
+  - profiles/saas-eu-b2b.json          (NEW, AI-generated)
+  - profiles/internal-tool.json        (NEW, AI-generated)
+  - profiles/mobile-app-only.json      (NEW, AI-generated)
+  - profiles/agency-client-work.json   (NEW, AI-generated)
+  - profiles/oss-library.json          (NEW, AI-generated)
+  - profiles/README.md                 (NEW, AI-generated)
+  - setup-project.ps1                  (MODIFIED, +Profile-Parameter + interactive)
+  - setup-project.sh                   (MODIFIED, +Profile-Parameter + interactive)
+  - update.ps1                         (MODIFIED, +Profile-Filter)
+  - update.sh                          (MODIFIED, +Profile-Filter, +jq-Hinweis)
+  - CLAUDE.md                          (MODIFIED, +Abschnitt PROJEKT-PROFIL)
+  - scripts/validate.sh                (MODIFIED, +Profile-Check, +provenance-Workflow Pflicht)
+  - README.md                          (MODIFIED, +Profil-Sektion)
+  - CHANGELOG.md                       (MODIFIED, +v1.7.0)
+
+Model:    claude-opus-4-7 (1M context)
+Persona:  Agency Director + DevOps (Kai) + PM (David, Profil-Designs)
+Reviewer: mtmatefi
+Task:     Slim-Mode-Setup ermoeglichen — nicht jedes Projekt braucht alle
+          14 Teams + alle EU-Regulierungen. 5 vordefinierte Profile mit
+          interaktiver Auswahl beim setup-project. Profile-Filter in update.
+Notes:    Klassifikator-Sperre beim git-hook-Auto-Installer in v1.6 hat
+          zu manuellem Setup gefuehrt. Hier kein vergleichbares Problem —
+          Profil-Auswahl ist standard CLI-Interaktion. Custom Profile durch
+          eigene JSON-Datei in profiles/ erweiterbar.
+          Bash-Profile-Parsing erfordert `jq` — Fallback dokumentiert.
 Commit:   (dieser Commit)
 
 <!-- AI-PROVENANCE-LOG-END -->

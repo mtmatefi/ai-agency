@@ -40,6 +40,24 @@ echo ""
 echo "One Stop Agency — Update"
 echo "========================"
 echo "Ziel: $TARGET_DIR"
+
+# Profil aus .agency/config.json lesen (falls vorhanden)
+ACTIVE_TEAMS=""
+PROFILE_NAME=""
+CONFIG="$TARGET_DIR/.agency/config.json"
+if [ -f "$CONFIG" ]; then
+    if command -v jq >/dev/null 2>&1; then
+        PROFILE_NAME=$(jq -r '.profile // empty' "$CONFIG" 2>/dev/null)
+        ACTIVE_TEAMS=$(jq -r '.source.teams[]? // empty' "$CONFIG" 2>/dev/null | tr '\n' '|' | sed 's/|$//')
+        if [ -n "$ACTIVE_TEAMS" ]; then
+            COUNT=$(printf '%s' "$ACTIVE_TEAMS" | tr '|' '\n' | wc -l | tr -d ' ')
+            echo "Profil: $PROFILE_NAME (Teams aktiv: $COUNT/14)"
+        fi
+    else
+        echo "WARN: jq nicht installiert — Profil-Filter ignoriert, alle Teams werden synced."
+        echo "      (Tipp: brew/apt install jq fuer Profile-Support)"
+    fi
+fi
 echo ""
 
 # Verzeichnisstruktur anlegen
@@ -47,8 +65,21 @@ mkdir -p "$AGENCY_DIR/teams"
 
 SUCCESS=0
 FAIL=0
+SKIP=0
 
 for FILE in "${FILES[@]}"; do
+    # Profile-Filter: nur Team-Files filtern, CLAUDE.md + Templates immer syncen
+    if [ -n "$ACTIVE_TEAMS" ] && [[ "$FILE" == teams/* ]]; then
+        TEAM_NAME=$(basename "$FILE" .md)
+        if [[ "|$ACTIVE_TEAMS|" != *"|$TEAM_NAME|"* ]]; then
+            echo "  SKIP $FILE (nicht in Profil '$PROFILE_NAME')"
+            # Eventuell vorhandene alte Datei entfernen
+            if [ -f "$AGENCY_DIR/$FILE" ]; then rm -f "$AGENCY_DIR/$FILE"; fi
+            SKIP=$((SKIP + 1))
+            continue
+        fi
+    fi
+
     URL="$REPO_URL/$FILE"
     LOCAL_PATH="$AGENCY_DIR/$FILE"
 
@@ -57,10 +88,10 @@ for FILE in "${FILES[@]}"; do
 
     if curl -fsSL "$URL" -o "$LOCAL_PATH" 2>/dev/null; then
         echo "  OK  $FILE"
-        ((SUCCESS++))
+        SUCCESS=$((SUCCESS + 1))
     else
         echo "  FAIL $FILE"
-        ((FAIL++))
+        FAIL=$((FAIL + 1))
     fi
 done
 
@@ -80,10 +111,8 @@ elif [ -f "$TARGET_DIR/AI-PROVENANCE.md" ]; then
 fi
 
 echo ""
-if [ $FAIL -eq 0 ]; then
-    echo "Update abgeschlossen: $SUCCESS erfolgreich, $FAIL Fehler"
-else
-    echo "Update abgeschlossen: $SUCCESS erfolgreich, $FAIL Fehler"
+echo "Update abgeschlossen: $SUCCESS erfolgreich, $SKIP skipped (Profil), $FAIL Fehler"
+if [ $FAIL -gt 0 ]; then
     echo ""
     echo "Hinweis: Pruefe ob der Repo-URL korrekt ist:"
     echo "  Aktuell: $REPO_URL"

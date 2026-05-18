@@ -1,0 +1,19 @@
+{
+  "name": "agency-client-work",
+  "description": "Digital-Agentur — Projekte fuer wechselnde Kunden bauen",
+  "teams": [
+    "development-qa",
+    "infrastructure",
+    "security",
+    "compliance",
+    "legal",
+    "ux-ui",
+    "graphic-design",
+    "content-editorial",
+    "product-management",
+    "sales",
+    "finance"
+  ],
+  "regulations": ["dsgvo", "ai-act", "cra", "eaa"],
+  "notes": "Marketing + Customer Success deaktiviert (typisch beim Kunden). Sales aktiv (Akquise). Legal aktiv (Kunden-Vertraege, IP)."
+}

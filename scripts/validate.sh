@@ -103,11 +103,40 @@ for f in "${REQUIRED_TEMPLATES[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
+section "Profile"
+
+REQUIRED_PROFILES=(
+    "profiles/saas-eu-b2b.json"
+    "profiles/internal-tool.json"
+    "profiles/mobile-app-only.json"
+    "profiles/agency-client-work.json"
+    "profiles/oss-library.json"
+    "profiles/README.md"
+)
+for f in "${REQUIRED_PROFILES[@]}"; do
+    if [ -f "$f" ]; then check_ok "$f"; else check_fail "$f fehlt"; fi
+done
+
+# JSON-Syntax pruefen falls jq da
+if command -v jq >/dev/null 2>&1; then
+    for f in profiles/*.json; do
+        if jq empty "$f" 2>/dev/null; then
+            check_ok "$f valid JSON"
+        else
+            check_fail "$f hat ungueltiges JSON"
+        fi
+    done
+else
+    check_warn "jq nicht verfuegbar — JSON-Syntax-Pruefung uebersprungen"
+fi
+
+# ---------------------------------------------------------------------------
 section "Workflows"
 
 REQUIRED_WORKFLOWS=(
     ".github/workflows/auto-update.yml"
     ".github/workflows/validate.yml"
+    ".github/workflows/provenance-integrity.yml"
 )
 for f in "${REQUIRED_WORKFLOWS[@]}"; do
     if [ -f "$f" ]; then check_ok "$f"; else check_fail "$f fehlt"; fi
