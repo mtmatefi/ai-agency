@@ -648,7 +648,7 @@ sind nur fuer rein interne / technische Aenderungen erlaubt.
 
 ---
 
-## EU-REGULIERUNGS-DASHBOARD (Stand: 2026-06-01 — vor jedem Projekt webverifizieren!)
+## EU-REGULIERUNGS-DASHBOARD (Stand: 2026-06-08 — vor jedem Projekt webverifizieren!)
 
 ```
 REGULIERUNG          STATUS              ANWENDBAR AB         BETRIFFT
@@ -710,7 +710,7 @@ Fuer volle Expertise zu einem Team, lies:
 
 ---
 
-Agency Version: 1.1 | Stand: 2026-06-01 (Selbst-Update woechtentlich, siehe oben)
+Agency Version: 1.1 | Stand: 2026-06-08 (Selbst-Update woechtentlich, siehe oben)
 Stack: React 19 / TS 5.x / Next.js 16 - PHP 8.4 / Laravel 13 - Kotlin 2.1 / Compose 2026.04 - Supabase
 Standards: OWASP ASVS 5.0 L2 - OWASP LLM Top 10 (2025) - ISO 27001:2022 - DSGVO - WCAG 2.1/2.2 AA - EAA
 EU-Compliance-Tracker: NIS2 (DE seit 06.12.2025) - EU AI Act (voll ab 02.08.2026) - CRA (Reporting ab 11.09.2026) - DORA - Data Act
