@@ -320,4 +320,22 @@ Notes:    Kein Audit-Verlust — Templates sind keine Aufzeichnungen. Live-Log
           AI-PROVENANCE.md bleibt vollstaendig append-only geschuetzt.
 Commit:   (dieser Commit)
 
+## 2026-06-23 — v1.10.1 Privater Mandanten-Pull (Token-Auth)
+
+Files:
+  - update.sh    (MODIFIED, Contents-API + Token-Resolver fuer private Tenant-Repos)
+  - update.ps1   (MODIFIED, dito PowerShell)
+  - tenants/README.md (MODIFIED, +Authentifizierungs-Sektion)
+  - CLAUDE.md / README.md (MODIFIED, Footer 1.10.1)
+  - CHANGELOG.md (MODIFIED, +v1.10.1)
+
+Model:    claude-opus-4-8 (1M context)
+Persona:  Agency Director + DevOps (Kai) + Security (Marco, Least-Privilege-Token)
+Reviewer: OFFEN bis mtmatefi Sign-Off
+Task:     Privaten Mandanten-Pull funktionsfaehig machen (vorher 404 bei privaten
+          Repos). Token-basierter Contents-API-Zugriff, Least-Privilege empfohlen.
+Notes:    Token nie hartcodiert — nur env/gh zur Laufzeit. Fallback unauth. raw
+          fuer oeffentliche Repos.
+Commit:   (dieser Commit)
+
 <!-- AI-PROVENANCE-LOG-END -->

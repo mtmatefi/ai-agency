@@ -118,19 +118,55 @@ if [ -f "$CONFIG" ] && command -v jq >/dev/null 2>&1; then
     TENANT_REPO=$(jq -r '.tenant_repo // empty' "$CONFIG" 2>/dev/null)
     TENANT_PIN=$(jq -r '.tenant_pin // empty' "$CONFIG" 2>/dev/null)
     if [ -n "$TENANT" ] && [ -n "$TENANT_REPO" ]; then
-        # Pin aufloesen: tenant_pin ersetzt den Ref am Ende der Basis-URL
+        # Token fuer PRIVATE Mandanten-Repos aufloesen (optional, Reihenfolge: env -> gh)
+        TENANT_TOKEN="${AGENCY_TENANT_TOKEN:-${GITHUB_TOKEN:-}}"
+        if [ -z "$TENANT_TOKEN" ] && command -v gh >/dev/null 2>&1; then
+            TENANT_TOKEN="$(gh auth token 2>/dev/null || true)"
+        fi
+        # owner/repo/ref aus raw-URL parsen (fuer Contents-API bei privaten Repos)
+        T_OWNER=""; T_REPO=""; T_REF=""
+        case "$TENANT_REPO" in
+            https://raw.githubusercontent.com/*)
+                REST="${TENANT_REPO#https://raw.githubusercontent.com/}"
+                T_OWNER="$(printf '%s' "$REST" | cut -d/ -f1)"
+                T_REPO="$(printf '%s' "$REST" | cut -d/ -f2)"
+                T_REF="$(printf '%s' "$REST" | cut -d/ -f3)"
+                ;;
+        esac
+        # Pin aufloesen: tenant_pin ueberschreibt den Ref
         if [ -n "$TENANT_PIN" ]; then
+            T_REF="$TENANT_PIN"
             TENANT_BASE="${TENANT_REPO%/*}/$TENANT_PIN"
         else
             TENANT_BASE="$TENANT_REPO"
         fi
-        echo ""
-        echo "Mandant: $TENANT  (Overlay aus $TENANT_BASE)"
+
+        if [ -n "$TENANT_TOKEN" ] && [ -n "$T_OWNER" ] && [ -n "$T_REPO" ]; then
+            USE_API=1
+            echo ""
+            echo "Mandant: $TENANT  (privat, Contents-API $T_OWNER/$T_REPO@$T_REF)"
+        else
+            USE_API=0
+            echo ""
+            echo "Mandant: $TENANT  (Overlay aus $TENANT_BASE)"
+            [ -z "$TENANT_TOKEN" ] && echo "  Hinweis: kein Token (AGENCY_TENANT_TOKEN / GITHUB_TOKEN / gh) — funktioniert nur bei OEFFENTLICHEM Tenant-Repo."
+        fi
+
         TENANT_DIR="$AGENCY_DIR/tenant"
         mkdir -p "$TENANT_DIR"
         TENANT_FILES=("config.json" "standards.md" "design-system.md" "ux.md" "brand-voice.md")
         for TF in "${TENANT_FILES[@]}"; do
-            if curl -fsSL "$TENANT_BASE/$TF" -o "$TENANT_DIR/$TF" 2>/dev/null; then
+            OK=1
+            if [ "$USE_API" -eq 1 ]; then
+                curl -fsSL \
+                    -H "Authorization: Bearer $TENANT_TOKEN" \
+                    -H "Accept: application/vnd.github.raw" \
+                    "https://api.github.com/repos/$T_OWNER/$T_REPO/contents/$TF?ref=$T_REF" \
+                    -o "$TENANT_DIR/$TF" 2>/dev/null || OK=0
+            else
+                curl -fsSL "$TENANT_BASE/$TF" -o "$TENANT_DIR/$TF" 2>/dev/null || OK=0
+            fi
+            if [ "$OK" -eq 1 ]; then
                 echo "  OK  tenant/$TF"
                 SUCCESS=$((SUCCESS + 1))
             else

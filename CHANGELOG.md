@@ -7,6 +7,16 @@ Versionierung: [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.10.1] - 2026-06-23
+
+### Behoben
+- **Privater Mandanten-Pull:** `update.{sh,ps1}` zogen das Overlay per
+  unauthentifiziertem `raw.githubusercontent.com` — das schlug bei PRIVATEN
+  Tenant-Repos fehl (404). Der Pull nutzt jetzt die GitHub **Contents-API mit
+  Token** (Quelle: `AGENCY_TENANT_TOKEN` -> `GITHUB_TOKEN` -> `gh auth token`),
+  faellt ohne Token auf unauth. raw zurueck (nur oeffentliche Repos) + Warnhinweis.
+  Least-Privilege-Empfehlung dokumentiert in `tenants/README.md`.
+
 ## [1.10.0] - 2026-06-23
 
 ### Hinzugefuegt — Mandantenfaehigkeit (Multi-Tenancy)
