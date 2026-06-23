@@ -1,0 +1,19 @@
+{
+  "_comment": "Mandanten-Overlay-Meta. Pro Kunde forken aus agency-tenant-template. Nur Deltas pflegen.",
+  "name": "TENANT-SLUG",
+  "display_name": "Kunde Anzeigename",
+  "engine_min": "1.10.0",
+  "default_profile": "saas-eu-b2b",
+  "languages": ["de"],
+  "standards_overrides": {
+    "min_coverage": 80,
+    "owasp_asvs_level": "L2",
+    "extra_mandatory_checks": []
+  },
+  "sign_off": {
+    "_comment": "Kundenseitige Freigeber zusaetzlich zur Agency-Sign-Off-Matrix.",
+    "product_owner": "OFFEN",
+    "security": "OFFEN",
+    "brand": "OFFEN"
+  }
+}

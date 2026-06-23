@@ -7,6 +7,80 @@ Versionierung: [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-06-23
+
+### Hinzugefuegt — Mandantenfaehigkeit (Multi-Tenancy)
+Dritte Konfigurationsebene ueber den Profilen: pro Kunde (Mandant) eigene
+Standards, eigenes Design-System, eigener UX-Kundenkreis — ohne die geteilte
+Engine zu duplizieren. Architektur: `tenants/README.md`.
+- **`CLAUDE.md` -> `MANDANTEN-MODUS`-Sektion:** Schichten-Modell
+  (Basis < Profil < Mandant < Projekt-lokal), Overlay-Dateien, Anwendungs-Regeln
+  und **Override-Floor** (ein Mandant darf Standards nur verschaerfen, nie unter
+  ASVS L2 / Coverage 80% / DSGVO / WCAG / AI-Provenance absenken).
+- **`templates/tenant-template/`** — Vorlage fuer ein privates Mandanten-Repo
+  (`agency-tenant-<kunde>`): `config.json`, `standards.md`, `design-system.md`,
+  `ux.md`, `brand-voice.md`, `README.md` + `.github/workflows/validate-tenant.yml`.
+- **`scripts/validate-tenant.sh`** — validiert ein Overlay (Schema, Pflicht-Dateien,
+  Override-Floor). Laeuft lokal + in der CI jedes Mandanten-Repos (zieht sich DRY
+  aus der Engine).
+- **Zweistufiges `update.{sh,ps1}`:** nach dem Engine-Sync wird — falls `tenant`
+  in `.agency/config.json` gesetzt — das Overlay aus dem privaten Mandanten-Repo
+  nach `.agency/tenant/` gezogen (mit optionalem `tenant_pin` auf Commit-SHA).
+- **`/agency new-tenant`** Wizard + `templates/maintainer-checklists/add-new-tenant.md`.
+- **`tenants/README.md`** — Architektur, 1-Repo-pro-Kunde-Begruendung, Update-Flow.
+
+### Geaendert
+- `scripts/validate.sh`: neue Sektion "Mandantenfaehigkeit" (Praesenz aller
+  Tenancy-Dateien, MANDANTEN-MODUS-Sektion, tenant-Stage in den update-Scripts).
+- `.claude/skills/agency.md`: `new-tenant`-Subkommando in Routing, Menue, Frontmatter.
+- `README.md`: Tenancy-Sektion + Repo-Struktur.
+- **Append-only-Guard praezisiert:** `provenance-integrity.yml` + `.githooks/pre-commit`
+  schuetzen jetzt nur noch den LIVE-Log `AI-PROVENANCE.md`, nicht mehr die
+  Saat-Vorlage `templates/AI-PROVENANCE.md` (die sich legitim weiterentwickeln
+  muss — z.B. Modell-IDs). Behebt den Konflikt zwischen Append-only-Schutz und
+  dem neuen Modell-Konsistenz-Check aus v1.9.0.
+
+## [1.9.0] - 2026-06-23
+
+### Behoben (Bugfixes)
+- **Versions-Drift:** Footer in `CLAUDE.md` + `README.md` sagte `Version: 1.1`,
+  obwohl CHANGELOG bei `1.8.0` stand. Footer jetzt korrekt + ab sofort
+  validator-erzwungen (siehe unten).
+- **Modell-Drift:** alle forward-looking Referenzen von `claude-opus-4-7` /
+  `Opus 4.7` auf `claude-opus-4-8` / `Opus 4.8` aktualisiert (CLAUDE.md, README,
+  `templates/ai-headers-snippets.md`, `templates/AI-PROVENANCE.md`,
+  Maintainer-Checklisten). `AI-PROVENANCE.md` (Live-Log) bleibt historisch unberuehrt.
+- **Falsche Frische durch Auto-Update:** `auto-update.yml` ersetzte woechentlich
+  per `sed` JEDES `Stand: <Datum>` — auch das Regulierungs-Dashboard — und
+  signalisierte so eine Aktualitaet, die nie verifiziert wurde. Der Workflow
+  bumpt jetzt ausschliesslich die neue, dedizierte `Auto-Update-Stempel:`-Zeile.
+- **Tippfehler** in `scripts/validate.sh` ("gepruegen" -> "geprueft").
+
+### Hinzugefuegt — Selbstheilung + Human-in-the-Loop
+- **Drei getrennte Datums-Semantiken** im Footer: `Version` (= CHANGELOG-Top,
+  validator-erzwungen), `Inhaltlich verifiziert` (nur menschlich, nach echter
+  Webrecherche) und `Auto-Update-Stempel` (einzige bot-gebumpte Zeile).
+- **`auto-update.yml` oeffnet jetzt einen Pull Request** statt direkt auf `main`
+  zu pushen — der Bot macht die Arbeit, ein Mensch reviewt + merged. Validator
+  laeuft als Gate vor dem PR.
+- **`scripts/validate.sh` — vier neue Konsistenz-Checks:**
+  - Versions-Konsistenz: Footer (`CLAUDE.md` + `README.md`) == CHANGELOG-Top.
+  - Auto-Update-Stempel-Praesenz: Token muss existieren (sonst hat der Workflow
+    kein Ziel).
+  - Modell-Versions-Konsistenz: alle nicht-historischen Dateien muessen dieselbe
+    `opus-4-x`-ID nennen.
+  - Profil -> Team referenzielle Integritaet: jedes Team in `profiles/*.json`
+    muss eine `teams/<name>.md` haben.
+- **Lokale Git-Hooks:** `.githooks/pre-commit` (laeuft Validator +
+  AI-PROVENANCE-Append-only-Schutz vor jedem Commit) + `scripts/install-githooks.sh`
+  (One-Shot-Aktivierung via `core.hooksPath`). Schliesst die Luecke, dass der
+  bisherige Hook-Installer-Verweis in `templates/githooks/pre-commit` nie ein
+  reales Installer-Script hatte.
+
+### Geaendert
+- `README.md` Repo-Struktur: `.githooks/` + `scripts/install-githooks.sh` ergaenzt;
+  Auto-Update-Sektion auf PR-Flow umgeschrieben.
+
 ## [1.8.0] - 2026-05-18
 
 ### Hinzugefuegt — Maintainer-Skill `/agency`

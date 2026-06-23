@@ -1,16 +1,21 @@
 name: Auto-Update Agency
 
 # Selbst-Update-Workflow fuer das One-Stop-Agency-Repo.
-# Laeuft woechtentlich (Montag 06:00 UTC) und manuell via workflow_dispatch.
+# Laeuft woechentlich (Montag 06:00 UTC) und manuell via workflow_dispatch.
 #
-# Was es macht:
-#  1. Bumpt den "Stand: YYYY-MM-DD"-Datumsstempel in CLAUDE.md
-#  2. Holt aktuelle Framework-EOL-Daten von endoflife.date und schreibt sie in
-#     versions.snapshot.json (informativ — Personas pruefen weiterhin live)
-#  3. Commit + Push wenn etwas geaendert wurde
+# Human-in-the-Loop-Design (ab v1.9.0):
+#  - Der Bot macht die ARBEIT (Stempel bumpen, Versions-Snapshot holen, Validator),
+#    aber er pusht NICHT mehr auf main. Stattdessen oeffnet er einen Pull Request.
+#  - Ein Mensch reviewt + merged. So bleibt das Repo automatisch frisch, ohne dass
+#    ungeprueft auf main geschrieben wird.
+#
+# Was es anfasst:
+#  1. NUR die "Auto-Update-Stempel: YYYY-MM-DD"-Zeile (mechanischer Frische-Marker).
+#     "Inhaltlich verifiziert"- und "Stand"-Daten bleiben unberuehrt — die aendert
+#     ausschliesslich ein Mensch nach echter Webrecherche (RECHERCHE-PROTOKOLL).
+#  2. data/versions.snapshot.json (informativ — Personas pruefen weiterhin live).
 #
 # Hinweis: Dieser Workflow ersetzt NICHT die Pflicht der Personas zur Live-Recherche.
-# Er sorgt nur dafuer, dass Datums- und Versions-Snapshots nicht alt sind.
 
 on:
   schedule:
@@ -19,10 +24,11 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update:
-    name: Stamp + Snapshot Update
+    name: Stamp + Snapshot -> PR
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,11 +37,11 @@ jobs:
         id: today
         run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
-      - name: Bump Datums-Stempel in CLAUDE.md + README
+      - name: Bump NUR Auto-Update-Stempel in CLAUDE.md + README
         run: |
           TODAY="${{ steps.today.outputs.date }}"
-          # CLAUDE.md: "Stand: 2026-05-18" -> "Stand: TODAY"
-          sed -i -E "s/Stand: 20[0-9]{2}-[0-9]{2}-[0-9]{2}/Stand: ${TODAY}/g" CLAUDE.md README.md || true
+          # Bewusst eng: nur die mechanische Stempel-Zeile, NICHT jedes "Stand:".
+          sed -i -E "s/(Auto-Update-Stempel: )20[0-9]{2}-[0-9]{2}-[0-9]{2}/\1${TODAY}/g" CLAUDE.md README.md || true
 
       - name: Snapshot aktuelle Framework-Versionen (endoflife.date)
         run: |
@@ -50,21 +56,61 @@ jobs:
           for P in "${PRODUCTS[@]}"; do
             if $FIRST; then FIRST=false; else echo "," >> data/versions.snapshot.json; fi
             RESPONSE=$(curl -fsSL "https://endoflife.date/api/${P}.json" || echo "[]")
-            # nur die ersten 3 Eintraege behalten (current + 2 vorige)
             TRIMMED=$(echo "$RESPONSE" | jq '.[0:3]' || echo "[]")
             printf '  "%s": %s' "$P" "$TRIMMED" >> data/versions.snapshot.json
           done
           echo "" >> data/versions.snapshot.json
           echo "}" >> data/versions.snapshot.json
 
-      - name: Commit changes (falls vorhanden)
+      - name: Gibt es Aenderungen?
+        id: diff
         run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Keine Aenderungen — kein PR noetig."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validator (Gate vor PR)
+        if: steps.diff.outputs.changed == 'true'
+        run: bash scripts/validate.sh
+
+      - name: Pull Request oeffnen (statt direkt push)
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TODAY: ${{ steps.today.outputs.date }}
+          PR_BODY: |
+            Automatischer Frische-Lauf (Human-in-the-Loop).
+
+            **Was der Bot geaendert hat:**
+            - `Auto-Update-Stempel`-Zeile in `CLAUDE.md` + `README.md` auf heute gesetzt
+            - `data/versions.snapshot.json` von endoflife.date neu gezogen
+
+            **Was der Bot NICHT angefasst hat (bleibt menschlich kontrolliert):**
+            - `Inhaltlich verifiziert:`-Daten
+            - `Stand:`-Daten im Regulierungs-Dashboard und in Team-Dateien
+            - Versionsnummer
+
+            **Review-Checkliste vor Merge:**
+            - [ ] Validator gruen (laeuft automatisch via `validate.yml`)
+            - [ ] Versions-Snapshot plausibel (keine kaputten/leeren Arrays)
+            - [ ] Falls Regulierungen/Frameworks sich real geaendert haben: separater PR mit Content-Update + neues `Inhaltlich verifiziert:`-Datum (nicht hier)
+
+            > Hinweis: Dieser PR aktualisiert nur mechanische Stempel. Inhaltliche
+            > Aktualitaet (CVEs, Gesetze, Framework-Majors) bleibt Pflicht der Live-Recherche.
+        run: |
+          set -e
+          BR="auto-update/${TODAY}-${{ github.run_number }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add CLAUDE.md README.md data/versions.snapshot.json 2>/dev/null || true
-          if git diff --staged --quiet; then
-            echo "Keine Aenderungen — Skip Commit."
-          else
-            git commit -m "chore(auto-update): refresh date stamp + versions snapshot $(date -u +%Y-%m-%d)"
-            git push
-          fi
+          git checkout -b "$BR"
+          git add CLAUDE.md README.md data/versions.snapshot.json
+          git commit -m "chore(auto-update): refresh stamp + versions snapshot ${TODAY}"
+          git push -u origin "$BR"
+          gh label create auto-update --color ededed --description "Automatischer Frische-Lauf" 2>/dev/null || true
+          gh pr create --base main --head "$BR" \
+            --title "chore(auto-update): Frische-Stempel + Versions-Snapshot ${TODAY}" \
+            --body "$PR_BODY" \
+            --label "auto-update" || echo "PR evtl. bereits vorhanden — uebersprungen."

@@ -1,17 +1,19 @@
 name: AI-PROVENANCE Integrity
 
-# Stellt sicher, dass AI-PROVENANCE.md append-only ist.
+# Stellt sicher, dass der LIVE-Audit-Trail AI-PROVENANCE.md append-only ist.
 # Blockt PRs die bestehende Eintraege aendern oder loeschen.
 #
 # Warum: CRA Anhang VII verlangt 10 Jahre Aufbewahrung der technischen
 # Doku. AI Act Art. 13/16 verlangt Aufzeichnungspflichten. Rueckwirkendes
 # Aendern des Audit-Trails untergraebt beides.
+#
+# NICHT geschuetzt: templates/AI-PROVENANCE.md — das ist die Saat-VORLAGE
+# (kein Audit-Log) und muss sich weiterentwickeln duerfen (Modell-IDs, Format).
 
 on:
   pull_request:
     paths:
       - 'AI-PROVENANCE.md'
-      - 'templates/AI-PROVENANCE.md'
   workflow_dispatch:
 
 permissions:
@@ -34,7 +36,7 @@ jobs:
           set -e
           FAIL=0
 
-          for f in AI-PROVENANCE.md templates/AI-PROVENANCE.md; do
+          for f in AI-PROVENANCE.md; do
             [ -f "$f" ] || continue
 
             DIFF=$(git diff "$BASE_SHA...$HEAD_SHA" -- "$f")

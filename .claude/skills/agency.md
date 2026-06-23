@@ -1,6 +1,6 @@
 ---
 name: agency
-description: Wartungs- und Optimierungs-Skill fuer das mtmatefi/ai-agency Repo. Verwende diesen Skill wenn du das Agency-Repo selbst veraenderst — fuer guided Aenderungen, Integritaets-Pruefung, kontinuierliche Optimierung. Subkommandos `check`, `audit`, `new-team`, `new-profile`, `new-regulation`, `bump`, `optimize`, `log`. Bei `/agency` ohne Argument: Menue + Status.
+description: Wartungs- und Optimierungs-Skill fuer das mtmatefi/ai-agency Repo. Verwende diesen Skill wenn du das Agency-Repo selbst veraenderst — fuer guided Aenderungen, Integritaets-Pruefung, kontinuierliche Optimierung. Subkommandos `check`, `audit`, `new-team`, `new-profile`, `new-tenant`, `new-regulation`, `bump`, `optimize`, `log`. Bei `/agency` ohne Argument: Menue + Status.
 ---
 
 # Agency Maintainer Skill
@@ -34,6 +34,7 @@ Bei `/agency` ohne Argument: erst Status anzeigen, dann das Menue.
 | `optimize`          | Kontinuierliche-Verbesserungs-Analyse (mit Webrecherche) |
 | `new-team`          | Guided: neues Team hinzufuegen |
 | `new-profile`       | Guided: neues Profil hinzufuegen |
+| `new-tenant`        | Guided: neuen Mandanten (Kunde) anlegen |
 | `new-regulation`    | Guided: neue EU-/internationale Regulierung integrieren |
 | `bump <m\|n\|p>`    | Versions-Bump (major/minor/patch) inkl. CHANGELOG + AI-PROVENANCE |
 | `log "<task>"`      | Korrekt formatierten AI-PROVENANCE.md-Eintrag anfuegen |
@@ -166,6 +167,16 @@ Verwende `templates/maintainer-checklists/add-new-profile.md`.
 
 ---
 
+## /agency new-tenant
+
+Verwende `templates/maintainer-checklists/add-new-tenant.md`.
+Wichtig: ein Mandant ist ein eigenes PRIVATES Overlay-Repo (`agency-tenant-<kunde>`,
+geforkt aus `templates/tenant-template/`), NICHT eine Aenderung am Engine-Repo.
+Architektur: `tenants/README.md`. Schema/Precedence/Override-Floor: `CLAUDE.md`
+-> `MANDANTEN-MODUS`. Vor Abschluss: `bash scripts/validate-tenant.sh <pfad>`.
+
+---
+
 ## /agency new-regulation
 
 Verwende `templates/maintainer-checklists/add-new-regulation.md`.
@@ -221,6 +232,7 @@ Verfuegbare Subkommandos:
   /agency optimize       — kontinuierliche Verbesserung (mit Webrecherche)
   /agency new-team       — neues Team hinzufuegen (guided)
   /agency new-profile    — neues Profil hinzufuegen (guided)
+  /agency new-tenant     — neuen Mandanten (Kunde) anlegen (guided)
   /agency new-regulation — neue EU-Regulierung integrieren (guided)
   /agency bump           — Versions-Bump
   /agency log            — AI-PROVENANCE-Eintrag schreiben

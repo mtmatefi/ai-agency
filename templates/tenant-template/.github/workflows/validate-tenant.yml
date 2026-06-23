@@ -1,0 +1,32 @@
+name: Validate Tenant Overlay
+
+# CI fuer ein Mandanten-Overlay-Repo (agency-tenant-<KUNDE>).
+# Zieht den Validator aus der geteilten Engine (DRY) und prueft das Overlay:
+# Schema, Override-Floor, Pflicht-Dateien.
+#
+# Laeuft bei Push + PR auf main.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Tenant Validator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Engine-Validator ziehen
+        run: |
+          # An engine_min pinnen waere robuster; hier der Einfachheit halber main.
+          curl -fsSL https://raw.githubusercontent.com/mtmatefi/ai-agency/main/scripts/validate-tenant.sh -o /tmp/validate-tenant.sh
+
+      - name: Overlay validieren
+        run: bash /tmp/validate-tenant.sh .
