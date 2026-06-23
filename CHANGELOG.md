@@ -7,6 +7,19 @@ Versionierung: [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-06-23
+
+### Hinzugefuegt — Konsolidiertes Handbuch
+- **`docs/HANDBOOK.md`** (NEU) — das „Read-this-first"-Dokument zum Teilen mit
+  Kollegen: erklaert das ganze System auf einer Seite (Konzept + mentales Modell,
+  Schichtenmodell, Architektur, Installation, Alltags-Nutzung, Governance/Zero Trust,
+  Mandantenfaehigkeit, AI-Provenance & Selbst-Update, Wartung/`/agency`,
+  Datei-Landkarte, Grenzen/FAQ, Glossar) und verweist fuer Details auf die
+  jeweiligen Dateien statt zu duplizieren.
+- **`README.md`** — prominenter Verweis aufs Handbuch direkt unter dem Titel.
+- **`scripts/validate.sh`** — Sektion „Dokumentation": prueft Praesenz von
+  `docs/HANDBOOK.md` und den README-Link.
+
 ## [1.11.0] - 2026-06-23
 
 ### Hinzugefuegt — Zero Trust Governance (hoechste Praezedenz)

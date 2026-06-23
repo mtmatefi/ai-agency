@@ -5,6 +5,11 @@
 Schreib deine Aufgabe — das richtige Team wird automatisch erkannt und handelt.
 Kein manuelles Aktivieren. Kein Team-Management. Einfach arbeiten.
 
+> 📖 **Neu hier oder willst du es mit Kollegen teilen? Starte mit dem
+> [Handbuch (`docs/HANDBOOK.md`)](docs/HANDBOOK.md)** — erklaert das ganze System
+> (Konzept, Architektur, Installation, Nutzung, Governance, Mandanten, Wartung)
+> auf einer Seite.
+
 ---
 
 ## Was ist das?
@@ -539,7 +544,7 @@ git push -u origin main
 
 ---
 
-Version: 1.11.0 | Inhaltlich verifiziert: 2026-05-18 | Auto-Update-Stempel: 2026-06-22
+Version: 1.12.0 | Inhaltlich verifiziert: 2026-05-18 | Auto-Update-Stempel: 2026-06-22
 Stack: React 19 / TS 5.x / Next.js 16 | PHP 8.4 / Laravel 13 | Kotlin 2.1 / Compose 2026.04 | Supabase / Postgres 17
 Standards: OWASP ASVS 5.0 L2 | OWASP LLM Top 10 (2025) | ISO 27001:2022 | DSGVO | WCAG 2.1/2.2 AA | EAA
 EU-Regulierung: NIS2 (DE 06.12.2025) · AI Act (voll 02.08.2026) · CRA (Reporting 11.09.2026) · DORA · Data Act

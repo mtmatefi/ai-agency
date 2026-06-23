@@ -325,6 +325,20 @@ for f in "scripts/install-githooks.sh" ".githooks/pre-commit"; do
 done
 
 # ---------------------------------------------------------------------------
+section "Dokumentation"
+
+if [ -f docs/HANDBOOK.md ]; then
+    check_ok "docs/HANDBOOK.md vorhanden"
+else
+    check_fail "docs/HANDBOOK.md fehlt"
+fi
+if grep -q "docs/HANDBOOK.md" README.md 2>/dev/null; then
+    check_ok "README.md verlinkt das Handbuch"
+else
+    check_fail "README.md verlinkt docs/HANDBOOK.md nicht"
+fi
+
+# ---------------------------------------------------------------------------
 section "Governance (Zero Trust)"
 
 if [ -f GOVERNANCE.md ]; then
