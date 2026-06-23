@@ -7,6 +7,36 @@ Versionierung: [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.11.0] - 2026-06-23
+
+### Hinzugefuegt — Zero Trust Governance (hoechste Praezedenz)
+Basierend auf Anthropic "Zero Trust for AI Agents". Verbindliche Verfassung fuer
+alle Agenten im Workspace, die ueber allem anderen steht (Aufgabe, CLAUDE.md, Skills).
+- **`GOVERNANCE.md`** (NEU) — die Verfassung: 3 Kernprinzipien, "impossible vs.
+  annoying"-Test (§2), Instruktions-Quellen-Grenze / Prompt-Injection-Schutz (§3),
+  Identity & Credentials (§4), die **drei Lanes** GREEN/YELLOW/RED (§5), Tool-/
+  Supply-Chain-/Memory-Regeln (§6-8), Observability & Recovery (§9), Eskalations-
+  protokoll (§10), Self-Check (§11), Skill-Integration (§12), projektspezifische
+  §13-Config (fuer dieses Repo ausgefuellt) und Maintenance (§14).
+- **`CLAUDE.md` Sektion "0. GOVERNANCE GEHT VOR"** — verdrahtet `GOVERNANCE.md` als
+  hoechste Praezedenz (vor dem Agency Director), mit operativem Kern (§2/§3/§5/§10/§11).
+- **Lane -> Sign-Off-Mapping** in der Sign-Off-Matrix: GREEN autonom, YELLOW
+  Checks+Matrix, RED menschliche Freigabe (Agent bereitet nur vor). Merge nach
+  `main`, Rechte-/Permission-Aenderungen, Irreversibles = RED.
+- **Verteilung:** `update.{sh,ps1}` synchronisieren `GOVERNANCE.md` und kopieren es
+  ins Projekt-Root (wandert in jedes Projekt, das die Engine nutzt).
+- **`scripts/validate.sh`** — neue Sektion "Governance (Zero Trust)": Praesenz +
+  Kern-Marker in GOVERNANCE.md, CLAUDE.md-Verdrahtung, Sync in den update-Scripts.
+- **`README.md`** — Governance-Sektion + Repo-Struktur.
+
+### Hinweis zur Reichweite (Ehrlichkeit, GOVERNANCE.md §2)
+Dieses Repo ist ein Markdown-/Prompt-Framework. Es kann Governance **anordnen und
+prozessual erzwingen** (Lanes, Sign-Offs, Validator, Append-only-Audit, Branch
+Protection), aber Markdown-Regeln sind gegen einen kompromittierten Agenten nur
+ein "annoying"-Control. Echtes Enforcement (Sandbox/Egress, kurzlebige IdP-Tokens,
+Tool-Allow-List, Kill-Switch) gehoert in die Harness/Infra; offene Lücken sind in
+`GOVERNANCE.md` §13 mit `OFFEN` markiert.
+
 ## [1.10.1] - 2026-06-23
 
 ### Behoben

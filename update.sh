@@ -18,6 +18,7 @@ AGENCY_DIR="$TARGET_DIR/.agency"
 
 FILES=(
     "CLAUDE.md"
+    "GOVERNANCE.md"
     "teams/development-qa.md"
     "teams/infrastructure.md"
     "teams/security.md"
@@ -100,6 +101,12 @@ if [ -f "$AGENCY_DIR/CLAUDE.md" ]; then
     cp "$AGENCY_DIR/CLAUDE.md" "$TARGET_DIR/CLAUDE.md"
     echo ""
     echo "  CLAUDE.md -> Projekt-Root kopiert"
+fi
+
+# GOVERNANCE.md ins Projekt-Root kopieren (Verfassung, hoechste Praezedenz)
+if [ -f "$AGENCY_DIR/GOVERNANCE.md" ]; then
+    cp "$AGENCY_DIR/GOVERNANCE.md" "$TARGET_DIR/GOVERNANCE.md"
+    echo "  GOVERNANCE.md -> Projekt-Root kopiert"
 fi
 
 # AI-PROVENANCE.md initialisieren falls noch nicht vorhanden (Append-only Log!)

@@ -17,6 +17,7 @@ param(
 $AgencyDir = "$TargetDir\.agency"
 $FilesToSync = @(
     "CLAUDE.md",
+    "GOVERNANCE.md",
     "teams/development-qa.md",
     "teams/infrastructure.md",
     "teams/security.md",
@@ -106,6 +107,13 @@ if (Test-Path $ClaudeSource) {
     Copy-Item -Path $ClaudeSource -Destination $ClaudeTarget -Force
     Write-Host ""
     Write-Host "  CLAUDE.md -> Projekt-Root kopiert" -ForegroundColor Cyan
+}
+
+# GOVERNANCE.md ins Projekt-Root kopieren (Verfassung, hoechste Praezedenz)
+$GovSource = "$AgencyDir\GOVERNANCE.md"
+if (Test-Path $GovSource) {
+    Copy-Item -Path $GovSource -Destination "$TargetDir\GOVERNANCE.md" -Force
+    Write-Host "  GOVERNANCE.md -> Projekt-Root kopiert" -ForegroundColor Cyan
 }
 
 # AI-PROVENANCE.md initialisieren falls noch nicht vorhanden (Append-only Log — NICHT ueberschreiben!)
