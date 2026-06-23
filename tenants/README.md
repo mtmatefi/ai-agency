@@ -79,6 +79,21 @@ Voll: `templates/maintainer-checklists/add-new-tenant.md` bzw. `/agency new-tena
 diesem SHA gezogen statt von `main` (gleiches Prinzip wie das Engine-Pinning,
 siehe README "Pin auf bekannten guten Commit").
 
+## Authentifizierung (private Mandanten-Repos)
+
+Mandanten-Repos sind privat. `update.{sh,ps1}` zieht das Overlay deshalb ueber die
+GitHub Contents-API mit Token (nicht ueber unauth. raw — das gaebe 404). Token-Quelle
+in dieser Reihenfolge:
+
+1. `AGENCY_TENANT_TOKEN` (env) — empfohlen: feingranularer, kurzlebiger PAT mit
+   **nur Read-Contents** auf die `agency-tenant-*`-Repos.
+2. `GITHUB_TOKEN` (env).
+3. `gh auth token` (falls GitHub CLI eingeloggt).
+
+Kein Token gefunden -> Fallback auf unauth. raw (funktioniert nur bei OEFFENTLICHEN
+Repos) + Warnhinweis. Least-Privilege: gib dem Token nur Lesezugriff auf die
+Mandanten-Repos, nichts weiter; kurze Lebensdauer.
+
 ## Template
 
 Die Vorlage fuer ein neues Mandanten-Repo liegt unter

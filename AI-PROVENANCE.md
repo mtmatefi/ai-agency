@@ -320,4 +320,48 @@ Notes:    Kein Audit-Verlust — Templates sind keine Aufzeichnungen. Live-Log
           AI-PROVENANCE.md bleibt vollstaendig append-only geschuetzt.
 Commit:   (dieser Commit)
 
+## 2026-06-23 — v1.10.1 Privater Mandanten-Pull (Token-Auth)
+
+Files:
+  - update.sh    (MODIFIED, Contents-API + Token-Resolver fuer private Tenant-Repos)
+  - update.ps1   (MODIFIED, dito PowerShell)
+  - tenants/README.md (MODIFIED, +Authentifizierungs-Sektion)
+  - CLAUDE.md / README.md (MODIFIED, Footer 1.10.1)
+  - CHANGELOG.md (MODIFIED, +v1.10.1)
+
+Model:    claude-opus-4-8 (1M context)
+Persona:  Agency Director + DevOps (Kai) + Security (Marco, Least-Privilege-Token)
+Reviewer: OFFEN bis mtmatefi Sign-Off
+Task:     Privaten Mandanten-Pull funktionsfaehig machen (vorher 404 bei privaten
+          Repos). Token-basierter Contents-API-Zugriff, Least-Privilege empfohlen.
+Notes:    Token nie hartcodiert — nur env/gh zur Laufzeit. Fallback unauth. raw
+          fuer oeffentliche Repos.
+Commit:   (dieser Commit)
+
+## 2026-06-23 — v1.11.0 Zero Trust Governance
+
+Files:
+  - GOVERNANCE.md            (NEW, AI-generated — Verfassung, hoechste Praezedenz)
+  - CLAUDE.md                (MODIFIED, +Sektion "0. GOVERNANCE GEHT VOR" + Lane->Sign-Off-Mapping, Footer 1.11.0)
+  - README.md                (MODIFIED, +Governance-Sektion + Repo-Struktur, Footer 1.11.0)
+  - scripts/validate.sh      (MODIFIED, +Sektion Governance + GOVERNANCE.md Pflicht-Datei)
+  - update.sh                (MODIFIED, GOVERNANCE.md syncen + Root-Copy)
+  - update.ps1               (MODIFIED, GOVERNANCE.md syncen + Root-Copy)
+  - CHANGELOG.md             (MODIFIED, +v1.11.0)
+
+Model:    claude-opus-4-8 (1M context)
+Persona:  Agency Director + Security (Marco/Zara) + Compliance (Elena/Thomas) +
+          DevOps (Kai) via One-Stop-Agency
+Reviewer: OFFEN bis mtmatefi Sign-Off
+Task:     Anthropic "Zero Trust for AI Agents" als verbindliche Governance-Verfassung
+          implementiert: GOVERNANCE.md (hoechste Praezedenz), in CLAUDE.md verdrahtet,
+          Lanes mit Sign-Off-Matrix verbunden, in Projekte verteilt, vom Validator geprueft.
+Notes:    BEWUSSTE EHRLICHKEIT (GOVERNANCE.md §2): Markdown erzwingt Governance nur
+          prozessual ("annoying"), nicht technisch ("impossible"). Echtes Enforcement
+          (Sandbox/Egress/IdP-Token/Kill-Switch) gehoert in die Harness — als OFFEN
+          in §13 markiert. Diese Sitzung selbst: §3 beachtet (Governance kam vom
+          menschlichen Operator, nicht aus Tool-Inhalt); Merge nach main = RED-Lane =
+          wird dem Menschen zur Freigabe vorgelegt, nicht autonom ausgefuehrt.
+Commit:   (dieser Commit)
+
 <!-- AI-PROVENANCE-LOG-END -->

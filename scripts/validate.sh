@@ -39,6 +39,7 @@ section "Datei-Praesenz"
 
 REQUIRED_TOPLEVEL=(
     "CLAUDE.md"
+    "GOVERNANCE.md"
     "README.md"
     "LICENSE"
     "CHANGELOG.md"
@@ -321,6 +322,39 @@ section "Git-Hooks (lokale Selbstheilung)"
 
 for f in "scripts/install-githooks.sh" ".githooks/pre-commit"; do
     if [ -f "$f" ]; then check_ok "$f"; else check_fail "$f fehlt"; fi
+done
+
+# ---------------------------------------------------------------------------
+section "Governance (Zero Trust)"
+
+if [ -f GOVERNANCE.md ]; then
+    check_ok "GOVERNANCE.md vorhanden"
+    # Verfassung muss die Kern-Sektionen + §13-Config-Block haben
+    for marker in "Zero Trust Governance" "The Three Lanes" "default_lane"; do
+        if grep -q "$marker" GOVERNANCE.md 2>/dev/null; then
+            check_ok "GOVERNANCE.md enthaelt '$marker'"
+        else
+            check_fail "GOVERNANCE.md fehlt '$marker'"
+        fi
+    done
+else
+    check_fail "GOVERNANCE.md fehlt"
+fi
+
+# CLAUDE.md muss Governance als hoechste Praezedenz verdrahten
+if grep -q "GOVERNANCE GEHT VOR" CLAUDE.md 2>/dev/null && grep -q "GOVERNANCE.md" CLAUDE.md 2>/dev/null; then
+    check_ok "CLAUDE.md verdrahtet GOVERNANCE.md (hoechste Praezedenz)"
+else
+    check_fail "CLAUDE.md verweist nicht auf GOVERNANCE.md als hoechste Praezedenz"
+fi
+
+# update-Scripts muessen GOVERNANCE.md mit-syncen (wandert in jedes Projekt)
+for s in update.sh update.ps1; do
+    if grep -q "GOVERNANCE.md" "$s" 2>/dev/null; then
+        check_ok "$s synct GOVERNANCE.md ins Projekt"
+    else
+        check_fail "$s synct GOVERNANCE.md nicht"
+    fi
 done
 
 # ---------------------------------------------------------------------------

@@ -17,6 +17,7 @@ param(
 $AgencyDir = "$TargetDir\.agency"
 $FilesToSync = @(
     "CLAUDE.md",
+    "GOVERNANCE.md",
     "teams/development-qa.md",
     "teams/infrastructure.md",
     "teams/security.md",
@@ -108,6 +109,13 @@ if (Test-Path $ClaudeSource) {
     Write-Host "  CLAUDE.md -> Projekt-Root kopiert" -ForegroundColor Cyan
 }
 
+# GOVERNANCE.md ins Projekt-Root kopieren (Verfassung, hoechste Praezedenz)
+$GovSource = "$AgencyDir\GOVERNANCE.md"
+if (Test-Path $GovSource) {
+    Copy-Item -Path $GovSource -Destination "$TargetDir\GOVERNANCE.md" -Force
+    Write-Host "  GOVERNANCE.md -> Projekt-Root kopiert" -ForegroundColor Cyan
+}
+
 # AI-PROVENANCE.md initialisieren falls noch nicht vorhanden (Append-only Log — NICHT ueberschreiben!)
 $ProvenanceSource = "$AgencyDir\templates\AI-PROVENANCE.md"
 $ProvenanceTarget = "$TargetDir\AI-PROVENANCE.md"
@@ -127,19 +135,44 @@ if ($Config -and $Config.tenant -and $Config.tenant_repo) {
     $Tenant = $Config.tenant
     $TenantRepo = $Config.tenant_repo
     $TenantPin = $Config.tenant_pin
+    # Token fuer PRIVATE Mandanten-Repos aufloesen (optional, Reihenfolge: env -> gh)
+    $TenantToken = $env:AGENCY_TENANT_TOKEN
+    if (-not $TenantToken) { $TenantToken = $env:GITHUB_TOKEN }
+    if (-not $TenantToken -and (Get-Command gh -ErrorAction SilentlyContinue)) {
+        try { $TenantToken = (gh auth token 2>$null) } catch {}
+    }
+    # owner/repo/ref aus raw-URL parsen (fuer Contents-API bei privaten Repos)
+    $TOwner = $null; $TRepo = $null; $TRef = $null
+    if ($TenantRepo -match '^https://raw\.githubusercontent\.com/([^/]+)/([^/]+)/([^/]+)') {
+        $TOwner = $Matches[1]; $TRepo = $Matches[2]; $TRef = $Matches[3]
+    }
     if ($TenantPin) {
+        $TRef = $TenantPin
         $TenantBase = ($TenantRepo -replace '/[^/]+$', "/$TenantPin")
     } else {
         $TenantBase = $TenantRepo
     }
+
+    $UseApi = ([bool]$TenantToken -and [bool]$TOwner -and [bool]$TRepo)
     Write-Host ""
-    Write-Host "Mandant: $Tenant (Overlay aus $TenantBase)" -ForegroundColor Cyan
+    if ($UseApi) {
+        Write-Host "Mandant: $Tenant (privat, Contents-API $TOwner/$TRepo@$TRef)" -ForegroundColor Cyan
+    } else {
+        Write-Host "Mandant: $Tenant (Overlay aus $TenantBase)" -ForegroundColor Cyan
+        if (-not $TenantToken) { Write-Host "  Hinweis: kein Token (AGENCY_TENANT_TOKEN / GITHUB_TOKEN / gh) — funktioniert nur bei OEFFENTLICHEM Tenant-Repo." -ForegroundColor Yellow }
+    }
+
     $TenantDir = "$AgencyDir\tenant"
     New-Item -ItemType Directory -Path $TenantDir -Force | Out-Null
     $TenantFiles = @("config.json", "standards.md", "design-system.md", "ux.md", "brand-voice.md")
     foreach ($TF in $TenantFiles) {
         try {
-            $R = Invoke-WebRequest -Uri "$TenantBase/$TF" -UseBasicParsing -ErrorAction Stop
+            if ($UseApi) {
+                $Headers = @{ Authorization = "Bearer $TenantToken"; Accept = "application/vnd.github.raw" }
+                $R = Invoke-WebRequest -Uri "https://api.github.com/repos/$TOwner/$TRepo/contents/$($TF)?ref=$TRef" -Headers $Headers -UseBasicParsing -ErrorAction Stop
+            } else {
+                $R = Invoke-WebRequest -Uri "$TenantBase/$TF" -UseBasicParsing -ErrorAction Stop
+            }
             Set-Content -Path "$TenantDir\$TF" -Value $R.Content -Encoding UTF8
             Write-Host "  OK  tenant/$TF" -ForegroundColor Green
             $SuccessCount++
