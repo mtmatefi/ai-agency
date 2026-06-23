@@ -364,4 +364,26 @@ Notes:    BEWUSSTE EHRLICHKEIT (GOVERNANCE.md §2): Markdown erzwingt Governance
           wird dem Menschen zur Freigabe vorgelegt, nicht autonom ausgefuehrt.
 Commit:   (dieser Commit)
 
+## 2026-06-23 — v1.12.0 Konsolidiertes Handbuch
+
+Files:
+  - docs/HANDBOOK.md    (NEW, AI-generated — Gesamt-Doku zum Teilen)
+  - README.md           (MODIFIED, Handbuch-Verweis + Footer 1.12.0)
+  - scripts/validate.sh (MODIFIED, +Sektion Dokumentation)
+  - CLAUDE.md           (MODIFIED, Footer 1.12.0)
+  - CHANGELOG.md        (MODIFIED, +v1.12.0)
+
+Model:    claude-opus-4-8 (1M context)
+Persona:  Ben Fischer (Technical Writer) + Agency Director
+Reviewer: OFFEN bis mtmatefi Sign-Off
+Task:     Ein sauberes, konsolidiertes Handbuch erstellen, das alles zusammenfuehrt
+          (Konzept/Architektur/Installation/Nutzung/Governance/Mandanten/Wartung),
+          damit es mit Kollegen geteilt werden kann. Verweist auf Detail-Dateien
+          statt zu duplizieren.
+Notes:    Enthaelt bewusst eine ehrliche "Grenzen & FAQ"-Sektion (Personas sind
+          Rollen, Governance ist Policy-Schicht nicht techn. Enforcement) — konsistent
+          mit GOVERNANCE.md §2. Keine neuen datierten Fakten erfunden; Regulierungs-/
+          Versions-Details verbleiben in CLAUDE.md/GOVERNANCE.md.
+Commit:   (dieser Commit)
+
 <!-- AI-PROVENANCE-LOG-END -->
