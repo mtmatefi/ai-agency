@@ -20,7 +20,7 @@ Files:
   - path/to/file.ext (NEW, full AI-generated)
   - path/to/other.ext (MODIFIED, ai-block lines 42-87)
 
-Model:    claude-opus-4-7 (1M context)
+Model:    claude-opus-4-8 (1M context)
 Persona:  <Persona-Name> (<Team>) via One-Stop-Agency
 Reviewer: <git user / "OFFEN bis Sign-Off">
 Task:     <Beschreibung der Aufgabe>
@@ -36,7 +36,7 @@ Notes:    <Hinweise, z.B. ausstehende Sign-Offs, Test-Coverage, Limitationen>
 Files:
   - src/example.ts (NEW, full AI-generated)
 
-Model:    claude-opus-4-7 (1M context)
+Model:    claude-opus-4-8 (1M context)
 Persona:  Lucas Keller (Development & QA) via One-Stop-Agency
 Reviewer: OFFEN
 Task:     Demo-Eintrag, Format-Vorlage

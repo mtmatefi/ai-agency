@@ -234,4 +234,35 @@ Notes:    Skill-Datei in .claude/skills/ (Claude-Code-Konvention). Subkommandos:
           (LICENSE + CHANGELOG + AI-PROVENANCE + teams/14 + profiles/ + validate.sh).
 Commit:   (dieser Commit)
 
+## 2026-06-23 — v1.9.0 Bugfixes + Selbstheilung & Human-in-the-Loop
+
+Files:
+  - CLAUDE.md                                    (MODIFIED, Footer-Datums-Semantik + Modell-Refs opus-4-8 + Dashboard-Datum)
+  - README.md                                    (MODIFIED, Footer + Auto-Update-Sektion PR-Flow + Repo-Struktur + Modell-Refs)
+  - scripts/validate.sh                          (MODIFIED, +4 Konsistenz-Checks, Tippfehler-Fix)
+  - scripts/install-githooks.sh                  (NEW, AI-generated — Hook-Installer)
+  - .githooks/pre-commit                         (NEW, AI-generated — lokaler Validator+Provenance-Gate)
+  - .github/workflows/auto-update.yml            (MODIFIED, PR-Flow statt push + nur Auto-Update-Stempel)
+  - templates/ai-headers-snippets.md             (MODIFIED, Modell-Refs opus-4-8)
+  - templates/AI-PROVENANCE.md                   (MODIFIED, Modell-Refs opus-4-8)
+  - templates/maintainer-checklists/add-new-team.md   (MODIFIED, Modell-Refs opus-4-8)
+  - templates/maintainer-checklists/bump-version.md   (MODIFIED, Modell-Refs opus-4-8)
+  - CHANGELOG.md                                 (MODIFIED, +v1.9.0)
+
+Model:    claude-opus-4-8 (1M context)
+Persona:  Agency Director + DevOps (Kai, Hooks/Workflow/Validator) + Tech Writer (Ben, CHANGELOG/README)
+Reviewer: OFFEN bis mtmatefi Sign-Off
+Task:     Alle in der Repo-Bewertung gefundenen Bugs gefixt (Versions-Drift,
+          Modell-Drift, falsche Auto-Update-Frische, Tippfehler) und Repo so
+          umgebaut, dass es sich automatisch sauber haelt, aber mit
+          Human-in-the-Loop: Auto-Update oeffnet PR statt push, Validator als
+          Gate, neue Konsistenz-Checks (Version/Modell/Profil-Team/Auto-Stempel),
+          lokale Git-Hooks.
+Notes:    Historische AI-PROVENANCE-Eintraege bewusst NICHT auf opus-4-8
+          umgeschrieben (Audit-Trail-Integritaet). Validator vor diesem Eintrag
+          gruen inkl. 3 bestandener Negativ-Tests. Sign-Off-Matrix unveraendert
+          (keine neuen Personas/Profile/Regulierungen) — relevante Reviewer waeren
+          Kai (DevOps/CI) + Nina (QA, Validator-Vollstaendigkeit).
+Commit:   (dieser Commit)
+
 <!-- AI-PROVENANCE-LOG-END -->

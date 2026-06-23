@@ -63,7 +63,7 @@ Files:
   - README.md (MODIFIED, Version-String im Footer)
   - AI-PROVENANCE.md (MODIFIED, +dieser Eintrag)
 
-Model:    claude-opus-4-7 (1M context)
+Model:    claude-opus-4-8 (1M context)
 Persona:  Tech Writer (Ben) + DevOps (Kai)
 Reviewer: OFFEN
 Task:     Versions-Bump auf v<NEW_VERSION>. Konsolidiert N Commits seit v<LAST>.
@@ -94,7 +94,7 @@ chore(release): v<NEW_VERSION>
 
 Siehe CHANGELOG.md fuer vollstaendige Liste.
 
-Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ```
 
 ## Schritt 8 — Tag-Vorschlag

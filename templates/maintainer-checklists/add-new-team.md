@@ -193,7 +193,7 @@ Files:
   - profiles/*.json           (MODIFIED, ja-nein-Entscheidungen)
   - CHANGELOG.md              (MODIFIED, +Eintrag)
 
-Model:    claude-opus-4-7 (1M context)
+Model:    claude-opus-4-8 (1M context)
 Persona:  Agency Director (Cross-Team Setup)
 Reviewer: OFFEN
 Task:     Team "<Anzeigename>" hinzufuegen
@@ -220,7 +220,7 @@ Files:
 Sign-offs pending (laut Sign-Off-Matrix):
 - [ ] mtmatefi (Repo-Eigner)
 
-Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ```
 
 ## Schritt 12 — Push

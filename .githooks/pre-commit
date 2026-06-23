@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# .githooks/pre-commit  (REPO-EIGENER Hook fuer mtmatefi/ai-agency)
+#
+# Lokale Selbstheilung + Human-in-the-Loop: jeder Commit wird VOR dem Anlegen
+# gegen den Validator geprueft und der AI-PROVENANCE.md-Append-only-Schutz
+# durchgesetzt. So bleibt das Repo lokal sauber, ohne auf den CI-Lauf zu warten.
+#
+# Aktivieren (einmalig):  bash scripts/install-githooks.sh
+# Bypass (nur Notfall):   git commit --no-verify ...   (im PR begruenden!)
+#
+# @ai-assisted: claude-opus-4-8 via One-Stop-Agency / Kai Bauer (DevOps)
+# @ai-date: 2026-06-23
+# @ai-task: Lokaler Pre-Commit-Gate (Validator + Provenance-Schutz)
+# @human-review: OFFEN bis mtmatefi Sign-Off
+
+set -e
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+FAIL=0
+
+# --- 1. Validator (struktur- + konsistenz-gate) ----------------------------
+if [ -f scripts/validate.sh ]; then
+    echo "pre-commit: running scripts/validate.sh ..."
+    if ! bash scripts/validate.sh >/tmp/agency-precommit-validate.log 2>&1; then
+        echo ""
+        echo "============================================================"
+        echo "  PRE-COMMIT BLOCK: Validator ist rot."
+        echo "============================================================"
+        tail -30 /tmp/agency-precommit-validate.log | sed 's/^/    /'
+        echo ""
+        echo "  Vollstaendiges Log: /tmp/agency-precommit-validate.log"
+        echo "  Fix die FAILs oben, dann erneut committen."
+        echo ""
+        FAIL=1
+    else
+        echo "pre-commit: validator OK"
+    fi
+fi
+
+# --- 2. AI-PROVENANCE.md append-only ---------------------------------------
+STAGED=$(git diff --cached --name-only)
+for f in $(printf "%s\n" "$STAGED" | grep -E '(^|/)AI-PROVENANCE\.md$' || true); do
+    [ -z "$f" ] && continue
+    [ -f "$f" ] || continue
+    REMOVED=$(git diff --cached "$f" | grep -cE '^-[^-]' || true)
+    if [ "$REMOVED" -gt 0 ]; then
+        echo ""
+        echo "============================================================"
+        echo "  PRE-COMMIT BLOCK: $f ist append-only!"
+        echo "============================================================"
+        echo "  Entfernte/geaenderte Zeilen: $REMOVED (max. 10 gezeigt)"
+        git diff --cached "$f" | grep -E '^-[^-]' | head -10 | sed 's/^/    /'
+        echo ""
+        echo "  -> Bestehende Eintraege nicht aendern. Nur unten anfuegen."
+        echo "     Korrekturen als NEUER Eintrag mit Verweis."
+        echo ""
+        FAIL=1
+    fi
+done
+
+if [ "$FAIL" -ne 0 ]; then
+    echo "pre-commit: ABGEBROCHEN. (Notfall-Bypass: git commit --no-verify)"
+    exit 1
+fi
+
+echo "pre-commit: alle Checks gruen."
+exit 0

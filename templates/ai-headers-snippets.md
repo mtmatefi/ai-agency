@@ -3,7 +3,7 @@
 Copy-paste-Vorlagen fuer die im `CLAUDE.md`-Protokoll geforderten
 **Ebene A (Datei-Header)** und **Ebene B (Block-Marker)**.
 
-Heute eingesetzes Modell: `claude-opus-4-7 (1M context)`.
+Heute eingesetzes Modell: `claude-opus-4-8 (1M context)`.
 Persona ist die Rolle aus One-Stop-Agency, die den Code "verantwortet"
 (z.B. "Lucas Keller", "Sarah Wagner", "Finn Meyer").
 
@@ -15,14 +15,14 @@ Persona ist die Rolle aus One-Stop-Agency, die den Code "verantwortet"
 /**
  * <1-Satz-Zweck der Datei>
  *
- * @ai-assisted: claude-opus-4-7 via One-Stop-Agency / <Persona>
+ * @ai-assisted: claude-opus-4-8 via One-Stop-Agency / <Persona>
  * @ai-date: YYYY-MM-DD
  * @ai-task: <kurze Beschreibung>
  * @human-review: <Name oder OFFEN>, <Datum oder OFFEN>
  */
 
 // Block-Marker fuer AI-generierte Sektion in existierender Datei:
-// @ai-block:start (claude-opus-4-7 / <Persona>, YYYY-MM-DD)
+// @ai-block:start (claude-opus-4-8 / <Persona>, YYYY-MM-DD)
 // purpose: <was tut der Block>
 ...
 // @ai-block:end
@@ -37,14 +37,14 @@ Persona ist die Rolle aus One-Stop-Agency, die den Code "verantwortet"
 /**
  * <1-Satz-Zweck der Datei>
  *
- * @ai-assisted claude-opus-4-7 via One-Stop-Agency / <Persona>
+ * @ai-assisted claude-opus-4-8 via One-Stop-Agency / <Persona>
  * @ai-date    YYYY-MM-DD
  * @ai-task    <kurze Beschreibung>
  * @human-review <Name oder OFFEN>, <Datum oder OFFEN>
  */
 
 // Block-Marker:
-// @ai-block:start (claude-opus-4-7 / <Persona>, YYYY-MM-DD)
+// @ai-block:start (claude-opus-4-8 / <Persona>, YYYY-MM-DD)
 // purpose: <was tut der Block>
 ...
 // @ai-block:end
@@ -58,13 +58,13 @@ Persona ist die Rolle aus One-Stop-Agency, die den Code "verantwortet"
 /**
  * <1-Satz-Zweck der Datei>
  *
- * @ai-assisted claude-opus-4-7 via One-Stop-Agency / <Persona>
+ * @ai-assisted claude-opus-4-8 via One-Stop-Agency / <Persona>
  * @ai-date YYYY-MM-DD
  * @ai-task <kurze Beschreibung>
  * @human-review <Name oder OFFEN>, <Datum oder OFFEN>
  */
 
-// @ai-block:start (claude-opus-4-7 / <Persona>, YYYY-MM-DD)
+// @ai-block:start (claude-opus-4-8 / <Persona>, YYYY-MM-DD)
 // purpose: <was tut der Block>
 ...
 // @ai-block:end
@@ -77,13 +77,13 @@ Persona ist die Rolle aus One-Stop-Agency, die den Code "verantwortet"
 ```python
 """<1-Satz-Zweck der Datei>.
 
-@ai-assisted: claude-opus-4-7 via One-Stop-Agency / <Persona>
+@ai-assisted: claude-opus-4-8 via One-Stop-Agency / <Persona>
 @ai-date: YYYY-MM-DD
 @ai-task: <kurze Beschreibung>
 @human-review: <Name oder OFFEN>, <Datum oder OFFEN>
 """
 
-# @ai-block:start (claude-opus-4-7 / <Persona>, YYYY-MM-DD)
+# @ai-block:start (claude-opus-4-8 / <Persona>, YYYY-MM-DD)
 # purpose: <was tut der Block>
 ...
 # @ai-block:end
@@ -94,7 +94,7 @@ Persona ist die Rolle aus One-Stop-Agency, die den Code "verantwortet"
 ## YAML / JSON / SQL / TOML
 
 ```yaml
-# @ai-assisted: claude-opus-4-7 via One-Stop-Agency / <Persona>
+# @ai-assisted: claude-opus-4-8 via One-Stop-Agency / <Persona>
 # @ai-date:     YYYY-MM-DD
 # @ai-task:     <kurze Beschreibung>
 # @human-review: <Name oder OFFEN>, <Datum oder OFFEN>
@@ -108,7 +108,7 @@ oder Begleit-Datei `<filename>.ai-provenance.md`, oder Eintrag in `AI-PROVENANCE
 ## Markdown
 
 ```markdown
-<!-- @ai-assisted: claude-opus-4-7 via One-Stop-Agency / <Persona>
+<!-- @ai-assisted: claude-opus-4-8 via One-Stop-Agency / <Persona>
      @ai-date: YYYY-MM-DD
      @ai-task: <kurze Beschreibung>
      @human-review: <Name oder OFFEN>, <Datum oder OFFEN> -->
@@ -119,7 +119,7 @@ oder Begleit-Datei `<filename>.ai-provenance.md`, oder Eintrag in `AI-PROVENANCE
 ## SQL-Migration
 
 ```sql
--- @ai-assisted: claude-opus-4-7 via One-Stop-Agency / Sarah Wagner
+-- @ai-assisted: claude-opus-4-8 via One-Stop-Agency / Sarah Wagner
 -- @ai-date:     YYYY-MM-DD
 -- @ai-task:     <Migrations-Zweck>
 -- @human-review: <Name oder OFFEN>
@@ -132,14 +132,14 @@ oder Begleit-Datei `<filename>.ai-provenance.md`, oder Eintrag in `AI-PROVENANCE
 
 ```bash
 #!/usr/bin/env bash
-# @ai-assisted: claude-opus-4-7 via One-Stop-Agency / Kai Bauer
+# @ai-assisted: claude-opus-4-8 via One-Stop-Agency / Kai Bauer
 # @ai-date:     YYYY-MM-DD
 # @ai-task:     <Script-Zweck>
 # @human-review: <Name oder OFFEN>
 ```
 
 ```powershell
-# @ai-assisted: claude-opus-4-7 via One-Stop-Agency / Kai Bauer
+# @ai-assisted: claude-opus-4-8 via One-Stop-Agency / Kai Bauer
 # @ai-date:     YYYY-MM-DD
 # @ai-task:     <Script-Zweck>
 # @human-review: <Name oder OFFEN>

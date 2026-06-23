@@ -215,8 +215,11 @@ one-stop-agency/
       bump-version.md
   .claude/skills/
     agency.md            <- Maintainer-Skill (siehe oben)
+  .githooks/
+    pre-commit           <- Repo-eigener Hook: Validator + AI-PROVENANCE-Schutz vor jedem Commit
   scripts/
-    validate.sh          <- Repo-Integritaets-Validator (CI-getrieben)
+    validate.sh          <- Repo-Integritaets-Validator (CI- + Hook-getrieben)
+    install-githooks.sh  <- Aktiviert .githooks/ via core.hooksPath (einmalig)
   AI-PROVENANCE.md       <- Audit-Trail des Repos selbst (Dogfooding)
   SECURITY.md            <- Threat-Modell, Vulnerability-Reporting
   BRANCH_PROTECTION.md   <- Step-by-step main-Branch-Schutz in GitHub
@@ -324,7 +327,7 @@ es macht**, gilt im Projekt die Pflicht laut `CLAUDE.md` -> "AI-CODE-DOKUMENTATI
 /**
  * <1-Satz-Zweck der Datei>
  *
- * @ai-assisted: claude-opus-4-7 via One-Stop-Agency / <Persona>
+ * @ai-assisted: claude-opus-4-8 via One-Stop-Agency / <Persona>
  * @ai-date: 2026-05-18
  * @ai-task: <kurze Beschreibung>
  * @human-review: <Name oder OFFEN>, <Datum oder OFFEN>
@@ -334,7 +337,7 @@ es macht**, gilt im Projekt die Pflicht laut `CLAUDE.md` -> "AI-CODE-DOKUMENTATI
 **Ebene B — Block-Marker** (bei AI-Sektionen innerhalb existierender Dateien):
 
 ```
-// @ai-block:start (claude-opus-4-7 / <Persona>, 2026-05-18)
+// @ai-block:start (claude-opus-4-8 / <Persona>, 2026-05-18)
 // purpose: <was tut der Block>
 ... AI-generierter Code ...
 // @ai-block:end
@@ -367,11 +370,22 @@ Dieses Repo bleibt **automatisch aktuell** auf drei Ebenen:
 ### Ebene 1 — Upstream (GitHub Actions, woechtentlich)
 
 `.github/workflows/auto-update.yml` laeuft jeden Montag 06:00 UTC und:
-- Aktualisiert den `Stand: YYYY-MM-DD`-Datumsstempel in `CLAUDE.md` + `README.md`
+- Bumpt **nur** die dedizierte `Auto-Update-Stempel: YYYY-MM-DD`-Zeile in
+  `CLAUDE.md` + `README.md` (mechanischer Frische-Marker). `Inhaltlich verifiziert:`-
+  und `Stand:`-Daten bleiben **menschlich kontrolliert** — die aendert nur ein
+  Mensch nach echter Webrecherche.
 - Holt aktuelle Framework-EOL-Versionen von endoflife.date in `data/versions.snapshot.json`
-- Committet automatisch wenn etwas geaendert wurde
+- Laesst den Validator als Gate laufen und **oeffnet einen Pull Request** (statt
+  direkt auf `main` zu pushen). Ein Mensch reviewt + merged — **Human-in-the-Loop**.
 
 Manuell triggerbar via `Actions -> Auto-Update Agency -> Run workflow` in GitHub.
+
+**Lokale Selbstheilung (einmalig aktivieren):**
+```bash
+bash scripts/install-githooks.sh
+```
+Danach laufen Validator + AI-PROVENANCE-Append-only-Schutz automatisch vor jedem
+lokalen Commit (Notfall-Bypass: `git commit --no-verify`).
 
 ### Ebene 2 — Downstream (in deinem Projekt)
 
@@ -451,7 +465,7 @@ git push -u origin main
 
 ---
 
-Version: 1.1 | Stand: 2026-06-22 (Selbst-Update woechtentlich, siehe oben)
+Version: 1.9.0 | Inhaltlich verifiziert: 2026-05-18 | Auto-Update-Stempel: 2026-06-22
 Stack: React 19 / TS 5.x / Next.js 16 | PHP 8.4 / Laravel 13 | Kotlin 2.1 / Compose 2026.04 | Supabase / Postgres 17
 Standards: OWASP ASVS 5.0 L2 | OWASP LLM Top 10 (2025) | ISO 27001:2022 | DSGVO | WCAG 2.1/2.2 AA | EAA
 EU-Regulierung: NIS2 (DE 06.12.2025) · AI Act (voll 02.08.2026) · CRA (Reporting 11.09.2026) · DORA · Data Act

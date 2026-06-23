@@ -232,7 +232,96 @@ for team in "${EXPECTED_TEAMS[@]}"; do
         check_warn "teams/${team}.md hat keinen '# TEAM:'-Header in Zeile 1"
     fi
 done
-check_ok "Team-Header gepruegen (siehe WARN oben falls Abweichung)"
+check_ok "Team-Header geprueft (siehe WARN oben falls Abweichung)"
+
+# ---------------------------------------------------------------------------
+section "Versions-Konsistenz (Footer == CHANGELOG)"
+
+CLAUDE_VER=$(grep -oE "Agency Version: [0-9]+\.[0-9]+\.[0-9]+" CLAUDE.md 2>/dev/null | head -1 | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" || true)
+README_VER=$(grep -oE "Version: [0-9]+\.[0-9]+\.[0-9]+" README.md 2>/dev/null | head -1 | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" || true)
+CHANGELOG_VER=$(grep -oE "^## \[[0-9]+\.[0-9]+\.[0-9]+\]" CHANGELOG.md 2>/dev/null | head -1 | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" || true)
+
+if [ -z "$CHANGELOG_VER" ]; then
+    check_fail "Keine Version in CHANGELOG.md gefunden (erwartet '## [X.Y.Z]')"
+else
+    check_ok "CHANGELOG-Top-Version: $CHANGELOG_VER"
+fi
+if [ -n "$CLAUDE_VER" ] && [ "$CLAUDE_VER" = "$CHANGELOG_VER" ]; then
+    check_ok "CLAUDE.md Footer-Version stimmt ($CLAUDE_VER)"
+else
+    check_fail "CLAUDE.md Footer-Version '$CLAUDE_VER' != CHANGELOG '$CHANGELOG_VER'"
+fi
+if [ -n "$README_VER" ] && [ "$README_VER" = "$CHANGELOG_VER" ]; then
+    check_ok "README.md Footer-Version stimmt ($README_VER)"
+else
+    check_fail "README.md Footer-Version '$README_VER' != CHANGELOG '$CHANGELOG_VER'"
+fi
+
+# ---------------------------------------------------------------------------
+section "Auto-Update-Stempel (einzige vom Workflow gebumpte Zeile)"
+
+for f in CLAUDE.md README.md; do
+    if grep -qE "Auto-Update-Stempel: 20[0-9]{2}-[0-9]{2}-[0-9]{2}" "$f" 2>/dev/null; then
+        check_ok "$f hat 'Auto-Update-Stempel'-Token"
+    else
+        check_fail "$f fehlt 'Auto-Update-Stempel: YYYY-MM-DD' — Auto-Update-Workflow haette kein Ziel"
+    fi
+done
+
+# ---------------------------------------------------------------------------
+section "Modell-Versions-Konsistenz (forward-looking)"
+
+# Live-Logs sind historisch und duerfen alte Modell-IDs nennen -> ausgeschlossen.
+FW_FILES=$(grep -rlE "opus-4-[0-9]+" --include="*.md" . 2>/dev/null | grep -vE "(AI-PROVENANCE\.md|CHANGELOG\.md)" || true)
+FW_MODELS=""
+while IFS= read -r file; do
+    [ -z "$file" ] && continue
+    M=$(grep -hoE "opus-4-[0-9]+" "$file" 2>/dev/null)
+    FW_MODELS="${FW_MODELS}${M}"$'\n'
+done <<< "$FW_FILES"
+FW_MODELS=$(printf "%s\n" "$FW_MODELS" | sed '/^$/d' | sort -u)
+DISTINCT=$(printf "%s" "$FW_MODELS" | grep -c . || true)
+if [ "$DISTINCT" -le 1 ]; then
+    check_ok "Einheitliche Modell-Referenz: $(printf "%s" "$FW_MODELS" | tr '\n' ' ')"
+else
+    check_fail "Uneinheitliche Modell-Referenzen in forward-looking Dateien:"
+    printf "%s\n" "$FW_MODELS" | sed 's/^/         /'
+    echo "         -> alle nicht-historischen Dateien muessen dieselbe opus-4-x-ID nennen."
+fi
+
+# ---------------------------------------------------------------------------
+section "Profil -> Team referenzielle Integritaet"
+
+PROFILE_FAIL=0
+for pf in profiles/*.json; do
+    [ -f "$pf" ] || continue
+    TEAMS_IN_PROFILE=$(awk '
+        /"teams"[[:space:]]*:/ { inteams=1 }
+        inteams {
+            line=$0
+            while (match(line, /"[a-z0-9-]+"/)) {
+                s=substr(line, RSTART+1, RLENGTH-2)
+                if (s != "teams") print s
+                line=substr(line, RSTART+RLENGTH)
+            }
+            if (index($0, "]") > 0) inteams=0
+        }
+    ' "$pf")
+    for t in $TEAMS_IN_PROFILE; do
+        if [ ! -f "teams/${t}.md" ]; then
+            check_fail "$pf referenziert teams/${t}.md — existiert nicht"
+            PROFILE_FAIL=$((PROFILE_FAIL + 1))
+        fi
+    done
+done
+[ "$PROFILE_FAIL" -eq 0 ] && check_ok "Alle Profile referenzieren existierende Team-Files"
+
+# ---------------------------------------------------------------------------
+section "Git-Hooks (lokale Selbstheilung)"
+
+for f in "scripts/install-githooks.sh" ".githooks/pre-commit"; do
+    if [ -f "$f" ]; then check_ok "$f"; else check_fail "$f fehlt"; fi
+done
 
 # ---------------------------------------------------------------------------
 section "Ergebnis"
