@@ -41,7 +41,8 @@ fi
 
 # --- 2. AI-PROVENANCE.md append-only ---------------------------------------
 STAGED=$(git diff --cached --name-only)
-for f in $(printf "%s\n" "$STAGED" | grep -E '(^|/)AI-PROVENANCE\.md$' || true); do
+# Nur LIVE-Logs schuetzen — NICHT die Saat-Vorlage templates/AI-PROVENANCE.md.
+for f in $(printf "%s\n" "$STAGED" | grep -E '(^|/)AI-PROVENANCE\.md$' | grep -v 'templates/AI-PROVENANCE.md' || true); do
     [ -z "$f" ] && continue
     [ -f "$f" ] || continue
     REMOVED=$(git diff --cached "$f" | grep -cE '^-[^-]' || true)

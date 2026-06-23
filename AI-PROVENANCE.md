@@ -302,4 +302,22 @@ Notes:    Override-Floor verhindert, dass ein Mandant Standards unter das
           gefuehrt, nicht in der Engine-Matrix.
 Commit:   (dieser Commit)
 
+## 2026-06-23 — Append-only-Guard auf Live-Log eingegrenzt
+
+Files:
+  - .github/workflows/provenance-integrity.yml  (MODIFIED, templates/AI-PROVENANCE.md aus Schutz entfernt)
+  - .githooks/pre-commit                        (MODIFIED, templates/ ausgenommen)
+  - CHANGELOG.md                                (MODIFIED, Notiz unter v1.10.0)
+
+Model:    claude-opus-4-8 (1M context)
+Persona:  Agency Director + DevOps (Kai)
+Reviewer: OFFEN bis mtmatefi Sign-Off
+Task:     CI-Fehler im PR #1 behoben: der Append-only-Guard schuetzte auch die
+          Saat-Vorlage templates/AI-PROVENANCE.md und kollidierte so mit dem
+          Modell-Bump (opus-4-7 -> opus-4-8) bzw. dem neuen Modell-Konsistenz-Check.
+          Guard nun auf den echten Live-Audit-Trail eingegrenzt.
+Notes:    Kein Audit-Verlust — Templates sind keine Aufzeichnungen. Live-Log
+          AI-PROVENANCE.md bleibt vollstaendig append-only geschuetzt.
+Commit:   (dieser Commit)
+
 <!-- AI-PROVENANCE-LOG-END -->

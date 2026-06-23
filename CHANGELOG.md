@@ -34,6 +34,11 @@ Engine zu duplizieren. Architektur: `tenants/README.md`.
   Tenancy-Dateien, MANDANTEN-MODUS-Sektion, tenant-Stage in den update-Scripts).
 - `.claude/skills/agency.md`: `new-tenant`-Subkommando in Routing, Menue, Frontmatter.
 - `README.md`: Tenancy-Sektion + Repo-Struktur.
+- **Append-only-Guard praezisiert:** `provenance-integrity.yml` + `.githooks/pre-commit`
+  schuetzen jetzt nur noch den LIVE-Log `AI-PROVENANCE.md`, nicht mehr die
+  Saat-Vorlage `templates/AI-PROVENANCE.md` (die sich legitim weiterentwickeln
+  muss — z.B. Modell-IDs). Behebt den Konflikt zwischen Append-only-Schutz und
+  dem neuen Modell-Konsistenz-Check aus v1.9.0.
 
 ## [1.9.0] - 2026-06-23
 
