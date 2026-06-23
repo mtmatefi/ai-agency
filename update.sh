@@ -110,6 +110,43 @@ elif [ -f "$TARGET_DIR/AI-PROVENANCE.md" ]; then
     echo "  AI-PROVENANCE.md existiert bereits (nicht ueberschrieben — Append-only)"
 fi
 
+# ---------------------------------------------------------------------------
+# Stufe 2: Mandanten-Overlay ziehen (falls 'tenant' in config.json)
+# ---------------------------------------------------------------------------
+if [ -f "$CONFIG" ] && command -v jq >/dev/null 2>&1; then
+    TENANT=$(jq -r '.tenant // empty' "$CONFIG" 2>/dev/null)
+    TENANT_REPO=$(jq -r '.tenant_repo // empty' "$CONFIG" 2>/dev/null)
+    TENANT_PIN=$(jq -r '.tenant_pin // empty' "$CONFIG" 2>/dev/null)
+    if [ -n "$TENANT" ] && [ -n "$TENANT_REPO" ]; then
+        # Pin aufloesen: tenant_pin ersetzt den Ref am Ende der Basis-URL
+        if [ -n "$TENANT_PIN" ]; then
+            TENANT_BASE="${TENANT_REPO%/*}/$TENANT_PIN"
+        else
+            TENANT_BASE="$TENANT_REPO"
+        fi
+        echo ""
+        echo "Mandant: $TENANT  (Overlay aus $TENANT_BASE)"
+        TENANT_DIR="$AGENCY_DIR/tenant"
+        mkdir -p "$TENANT_DIR"
+        TENANT_FILES=("config.json" "standards.md" "design-system.md" "ux.md" "brand-voice.md")
+        for TF in "${TENANT_FILES[@]}"; do
+            if curl -fsSL "$TENANT_BASE/$TF" -o "$TENANT_DIR/$TF" 2>/dev/null; then
+                echo "  OK  tenant/$TF"
+                SUCCESS=$((SUCCESS + 1))
+            else
+                echo "  FAIL tenant/$TF"
+                FAIL=$((FAIL + 1))
+            fi
+        done
+    fi
+elif [ -f "$CONFIG" ] && ! command -v jq >/dev/null 2>&1; then
+    if grep -q '"tenant"' "$CONFIG" 2>/dev/null; then
+        echo ""
+        echo "WARN: 'tenant' in config.json, aber jq fehlt — Mandanten-Overlay NICHT gezogen."
+        echo "      (jq installieren fuer Mandanten-Support)"
+    fi
+fi
+
 echo ""
 echo "Update abgeschlossen: $SUCCESS erfolgreich, $SKIP skipped (Profil), $FAIL Fehler"
 if [ $FAIL -gt 0 ]; then

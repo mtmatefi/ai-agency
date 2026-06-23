@@ -120,6 +120,37 @@ elseif (Test-Path $ProvenanceTarget) {
     Write-Host "  AI-PROVENANCE.md existiert bereits (nicht ueberschrieben — Append-only)" -ForegroundColor Gray
 }
 
+# ---------------------------------------------------------------------------
+# Stufe 2: Mandanten-Overlay ziehen (falls 'tenant' in config.json)
+# ---------------------------------------------------------------------------
+if ($Config -and $Config.tenant -and $Config.tenant_repo) {
+    $Tenant = $Config.tenant
+    $TenantRepo = $Config.tenant_repo
+    $TenantPin = $Config.tenant_pin
+    if ($TenantPin) {
+        $TenantBase = ($TenantRepo -replace '/[^/]+$', "/$TenantPin")
+    } else {
+        $TenantBase = $TenantRepo
+    }
+    Write-Host ""
+    Write-Host "Mandant: $Tenant (Overlay aus $TenantBase)" -ForegroundColor Cyan
+    $TenantDir = "$AgencyDir\tenant"
+    New-Item -ItemType Directory -Path $TenantDir -Force | Out-Null
+    $TenantFiles = @("config.json", "standards.md", "design-system.md", "ux.md", "brand-voice.md")
+    foreach ($TF in $TenantFiles) {
+        try {
+            $R = Invoke-WebRequest -Uri "$TenantBase/$TF" -UseBasicParsing -ErrorAction Stop
+            Set-Content -Path "$TenantDir\$TF" -Value $R.Content -Encoding UTF8
+            Write-Host "  OK  tenant/$TF" -ForegroundColor Green
+            $SuccessCount++
+        }
+        catch {
+            Write-Host "  FAIL tenant/$TF — $($_.Exception.Message)" -ForegroundColor Red
+            $FailCount++
+        }
+    }
+}
+
 Write-Host ""
 Write-Host ("Update abgeschlossen: {0} erfolgreich, {1} skipped (Profil), {2} Fehler" -f $SuccessCount, $SkipCount, $FailCount) -ForegroundColor $(if ($FailCount -eq 0) { "Green" } else { "Yellow" })
 

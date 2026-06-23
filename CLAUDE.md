@@ -102,6 +102,71 @@ Liste aller Profile + Schema: `profiles/README.md` im Agency-Repo.
 
 ---
 
+## MANDANTEN-MODUS — kundenspezifische Standards, Design & UX
+
+Profile sagen *welcher Projekt-TYP* (saas, internal-tool, …). Mandanten sagen
+*welcher KUNDE* (z.B. Pilatus vs. Gesellschaftsbecken). Ein Kunde hat eigene
+Standards, ein eigenes Design-System und einen eigenen UX-Kundenkreis — das ist
+eine dritte Konfigurationsebene ueber dem Profil.
+
+**Konfigurations-Schichten (Precedence von schwach nach stark):**
+
+```
+Basis (diese CLAUDE.md, 14 Teams)  <  Profil (Projekt-Typ)  <  MANDANT (Kunde)  <  Projekt-lokal
+```
+
+**Detection:** `.agency/config.json` hat ein `tenant`-Feld. Dann liegt das
+Overlay in `.agency/tenant/` (von `update.{sh,ps1}` aus dem privaten Mandanten-Repo
+gezogen). Beispiel-Config:
+
+```json
+{
+  "profile": "saas-eu-b2b",
+  "tenant": "pilatus",
+  "tenant_repo": "https://raw.githubusercontent.com/<org>/agency-tenant-pilatus/main",
+  "tenant_pin": null
+}
+```
+
+**Overlay-Dateien in `.agency/tenant/` (nur Deltas, niemals Voll-Kopien der Teams):**
+
+| Datei | Wirkt auf Personas | Inhalt |
+|-------|--------------------|--------|
+| `config.json`      | (Meta)                    | name, engine_min, default_profile, sprachen, sign_off-Kontakte |
+| `standards.md`     | Dev/QA/Security/Compliance | verschaerfte Coverage/ASVS/Review-Regeln, kundenspezifische Pflicht-Checks |
+| `design-system.md` | Noah, Lea, Felix          | Farb-/Typo-/Spacing-Tokens, Component-Lib, Do/Don't |
+| `ux.md`            | Emma, Anna                | Ziel-Personas, Kundensegmente, Tonalitaet, Customer Journeys |
+| `brand-voice.md`   | Amelie, Ben               | Schreibstil, Wording, verbotene/bevorzugte Begriffe |
+
+**Anwendungs-Regeln, wenn ein Mandant aktiv ist:**
+
+1. **Overlay zuerst lesen.** Vor jeder kunden-sichtbaren Arbeit (UI, Copy, UX,
+   Standards-Entscheidung) `.agency/tenant/`-Dateien lesen und ANWENDEN. Die
+   relevante Persona richtet sich nach dem Overlay, nicht nach generischen Defaults.
+2. **Override-Floor (nicht verhandelbar).** Ein Mandant darf Standards nur
+   **verschaerfen**, nie absenken. Diese Untergrenzen gelten IMMER, egal was im
+   Overlay steht:
+   - AI-CODE-DOKUMENTATIONS-PROTOKOLL + RECHERCHE-PROTOKOLL (diese Datei)
+   - Security-Minimum: OWASP ASVS 5.0 **L2** (Mandant darf L3 fordern, nicht L1)
+   - Coverage-Minimum: **80%** (Mandant darf 90% fordern, nicht 60%)
+   - DSGVO bei Personenbezug + WCAG 2.1 AA bei B2C-EU
+   - Wenn ein Overlay versucht, darunter zu gehen: **ignorieren + dem User melden.**
+3. **Konflikt-Aufloesung:** additive/strengere Mandanten-Werte gewinnen; wo ein
+   Overlay einen Floor zu unterschreiten versucht, gewinnt die Basis.
+4. **Vertraulichkeit:** Mandanten-Overlays enthalten Kundengeheimnisse (Brand,
+   Personas). NIE Inhalte von Mandant A in der Arbeit fuer Mandant B verwenden
+   oder erwaehnen.
+5. **Kompatibilitaet:** Wenn `config.json.engine_min` > diese Agency-Version:
+   warnen ("Overlay erwartet neuere Engine — `update` ausfuehren").
+
+**Kein `tenant`-Feld -> kein Mandanten-Modus** (nur Profil + Basis gelten).
+
+**Neuen Mandanten anlegen:** `/agency new-tenant` (folgt
+`templates/maintainer-checklists/add-new-tenant.md`). Architektur + Update-Flow:
+`tenants/README.md`.
+
+---
+
 ## RECHERCHE-PROTOKOLL (PFLICHT vor jeder fachlichen Aussage)
 
 LLM-Wissen ist immer mehrere Monate veraltet. Standards, CVEs, Framework-Versionen
@@ -710,7 +775,7 @@ Fuer volle Expertise zu einem Team, lies:
 
 ---
 
-Agency Version: 1.9.0 | Inhaltlich verifiziert: 2026-05-18 | Auto-Update-Stempel: 2026-06-22
+Agency Version: 1.10.0 | Inhaltlich verifiziert: 2026-05-18 | Auto-Update-Stempel: 2026-06-22
 (Versionsnummer = CHANGELOG-Top, validator-erzwungen. "Inhaltlich verifiziert" = letzte
 menschliche Content-Pruefung, NUR manuell aenderbar. "Auto-Update-Stempel" = mechanischer
 Bot-Lauf, einzige Zeile die der Auto-Update-Workflow anfasst.)

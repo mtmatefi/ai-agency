@@ -7,6 +7,34 @@ Versionierung: [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-06-23
+
+### Hinzugefuegt — Mandantenfaehigkeit (Multi-Tenancy)
+Dritte Konfigurationsebene ueber den Profilen: pro Kunde (Mandant) eigene
+Standards, eigenes Design-System, eigener UX-Kundenkreis — ohne die geteilte
+Engine zu duplizieren. Architektur: `tenants/README.md`.
+- **`CLAUDE.md` -> `MANDANTEN-MODUS`-Sektion:** Schichten-Modell
+  (Basis < Profil < Mandant < Projekt-lokal), Overlay-Dateien, Anwendungs-Regeln
+  und **Override-Floor** (ein Mandant darf Standards nur verschaerfen, nie unter
+  ASVS L2 / Coverage 80% / DSGVO / WCAG / AI-Provenance absenken).
+- **`templates/tenant-template/`** — Vorlage fuer ein privates Mandanten-Repo
+  (`agency-tenant-<kunde>`): `config.json`, `standards.md`, `design-system.md`,
+  `ux.md`, `brand-voice.md`, `README.md` + `.github/workflows/validate-tenant.yml`.
+- **`scripts/validate-tenant.sh`** — validiert ein Overlay (Schema, Pflicht-Dateien,
+  Override-Floor). Laeuft lokal + in der CI jedes Mandanten-Repos (zieht sich DRY
+  aus der Engine).
+- **Zweistufiges `update.{sh,ps1}`:** nach dem Engine-Sync wird — falls `tenant`
+  in `.agency/config.json` gesetzt — das Overlay aus dem privaten Mandanten-Repo
+  nach `.agency/tenant/` gezogen (mit optionalem `tenant_pin` auf Commit-SHA).
+- **`/agency new-tenant`** Wizard + `templates/maintainer-checklists/add-new-tenant.md`.
+- **`tenants/README.md`** — Architektur, 1-Repo-pro-Kunde-Begruendung, Update-Flow.
+
+### Geaendert
+- `scripts/validate.sh`: neue Sektion "Mandantenfaehigkeit" (Praesenz aller
+  Tenancy-Dateien, MANDANTEN-MODUS-Sektion, tenant-Stage in den update-Scripts).
+- `.claude/skills/agency.md`: `new-tenant`-Subkommando in Routing, Menue, Frontmatter.
+- `README.md`: Tenancy-Sektion + Repo-Struktur.
+
 ## [1.9.0] - 2026-06-23
 
 ### Behoben (Bugfixes)

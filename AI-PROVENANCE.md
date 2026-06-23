@@ -265,4 +265,41 @@ Notes:    Historische AI-PROVENANCE-Eintraege bewusst NICHT auf opus-4-8
           Kai (DevOps/CI) + Nina (QA, Validator-Vollstaendigkeit).
 Commit:   (dieser Commit)
 
+## 2026-06-23 — v1.10.0 Mandantenfaehigkeit (Multi-Tenancy)
+
+Files:
+  - CLAUDE.md                                              (MODIFIED, +MANDANTEN-MODUS Sektion, Footer 1.10.0)
+  - README.md                                             (MODIFIED, +Tenancy-Sektion + Repo-Struktur, Footer 1.10.0)
+  - tenants/README.md                                     (NEW, AI-generated — Architektur-Doku)
+  - templates/tenant-template/config.json                 (NEW, AI-generated)
+  - templates/tenant-template/standards.md                (NEW, AI-generated)
+  - templates/tenant-template/design-system.md            (NEW, AI-generated)
+  - templates/tenant-template/ux.md                       (NEW, AI-generated)
+  - templates/tenant-template/brand-voice.md              (NEW, AI-generated)
+  - templates/tenant-template/README.md                   (NEW, AI-generated)
+  - templates/tenant-template/.github/workflows/validate-tenant.yml (NEW, AI-generated)
+  - scripts/validate-tenant.sh                            (NEW, AI-generated — Overlay-Validator + Override-Floor)
+  - templates/maintainer-checklists/add-new-tenant.md     (NEW, AI-generated)
+  - update.sh                                             (MODIFIED, +Stufe-2 Mandanten-Overlay-Pull)
+  - update.ps1                                            (MODIFIED, +Stufe-2 Mandanten-Overlay-Pull)
+  - scripts/validate.sh                                   (MODIFIED, +Sektion Mandantenfaehigkeit)
+  - .claude/skills/agency.md                              (MODIFIED, +new-tenant Subkommando)
+  - CHANGELOG.md                                          (MODIFIED, +v1.10.0)
+
+Model:    claude-opus-4-8 (1M context)
+Persona:  Agency Director + DevOps (Kai, Scripts/Validator/CI) + UX (Emma) + UI (Noah) +
+          Content (Amelie/Ben, Templates) via One-Stop-Agency
+Reviewer: OFFEN bis mtmatefi Sign-Off
+Task:     Mandantenfaehigkeit als dritte Config-Ebene (Basis < Profil < Mandant).
+          Pro Kunde ein privates Overlay-Repo (geforkt aus tenant-template),
+          zweistufiges update.{sh,ps1}, validate-tenant.sh mit Override-Floor,
+          /agency new-tenant. Engine bleibt geteilt + DRY; Kundengeheimnisse
+          getrennt (Vertraulichkeit).
+Notes:    Override-Floor verhindert, dass ein Mandant Standards unter das
+          Engine-Minimum (ASVS L2 / Coverage 80% / DSGVO / WCAG / Provenance)
+          absenkt. Validator vor diesem Eintrag gruen. Sign-Off-Matrix unveraendert;
+          kundenseitige Sign-Off-Kontakte werden im Overlay (config.json.sign_off)
+          gefuehrt, nicht in der Engine-Matrix.
+Commit:   (dieser Commit)
+
 <!-- AI-PROVENANCE-LOG-END -->

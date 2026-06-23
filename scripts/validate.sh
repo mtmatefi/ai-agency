@@ -324,6 +324,41 @@ for f in "scripts/install-githooks.sh" ".githooks/pre-commit"; do
 done
 
 # ---------------------------------------------------------------------------
+section "Mandantenfaehigkeit (Multi-Tenancy)"
+
+TENANT_REQUIRED=(
+    "scripts/validate-tenant.sh"
+    "tenants/README.md"
+    "templates/maintainer-checklists/add-new-tenant.md"
+    "templates/tenant-template/config.json"
+    "templates/tenant-template/standards.md"
+    "templates/tenant-template/design-system.md"
+    "templates/tenant-template/ux.md"
+    "templates/tenant-template/brand-voice.md"
+    "templates/tenant-template/README.md"
+    "templates/tenant-template/.github/workflows/validate-tenant.yml"
+)
+for f in "${TENANT_REQUIRED[@]}"; do
+    if [ -f "$f" ]; then check_ok "$f"; else check_fail "$f fehlt"; fi
+done
+
+# CLAUDE.md muss die MANDANTEN-MODUS-Sektion haben
+if grep -q "## MANDANTEN-MODUS" CLAUDE.md 2>/dev/null; then
+    check_ok "CLAUDE.md hat MANDANTEN-MODUS-Sektion"
+else
+    check_fail "CLAUDE.md fehlt MANDANTEN-MODUS-Sektion"
+fi
+
+# update-Scripts muessen den tenant-Pull enthalten
+for s in update.sh update.ps1; do
+    if grep -q "tenant_repo" "$s" 2>/dev/null; then
+        check_ok "$s zieht Mandanten-Overlay (tenant_repo)"
+    else
+        check_fail "$s fehlt Mandanten-Overlay-Stage (tenant_repo)"
+    fi
+done
+
+# ---------------------------------------------------------------------------
 section "Ergebnis"
 
 if [ "$FAIL" -eq 0 ]; then
