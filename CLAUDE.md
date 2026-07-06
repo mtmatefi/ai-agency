@@ -827,7 +827,7 @@ Fuer volle Expertise zu einem Team, lies:
 
 ---
 
-Agency Version: 1.12.0 | Inhaltlich verifiziert: 2026-05-18 | Auto-Update-Stempel: 2026-06-22
+Agency Version: 1.12.0 | Inhaltlich verifiziert: 2026-05-18 | Auto-Update-Stempel: 2026-07-06
 (Versionsnummer = CHANGELOG-Top, validator-erzwungen. "Inhaltlich verifiziert" = letzte
 menschliche Content-Pruefung, NUR manuell aenderbar. "Auto-Update-Stempel" = mechanischer
 Bot-Lauf, einzige Zeile die der Auto-Update-Workflow anfasst.)

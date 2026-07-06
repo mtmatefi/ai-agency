@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-06-22",
+  "_generated": "2026-07-06",
   "_source": "https://endoflife.date",
   "_note": "Snapshot. Personas muessen weiterhin live verifizieren.",
   "nodejs": [
@@ -8,8 +8,8 @@
     "releaseDate": "2026-05-05",
     "lts": "2026-10-28",
     "eol": "2029-04-30",
-    "latest": "26.3.1",
-    "latestReleaseDate": "2026-06-18",
+    "latest": "26.4.0",
+    "latestReleaseDate": "2026-06-25",
     "support": "2027-10-27",
     "extendedSupport": false
   },
@@ -28,8 +28,8 @@
     "releaseDate": "2025-05-06",
     "lts": "2025-10-28",
     "eol": "2028-04-30",
-    "latest": "24.17.0",
-    "latestReleaseDate": "2026-06-18",
+    "latest": "24.18.0",
+    "latestReleaseDate": "2026-06-23",
     "support": "2026-10-20",
     "extendedSupport": false
   }
@@ -69,16 +69,16 @@
     "lts": true,
     "releaseDate": "2025-10-22",
     "eol": false,
-    "latest": "16.2.9",
-    "latestReleaseDate": "2026-06-09"
+    "latest": "16.2.10",
+    "latestReleaseDate": "2026-07-01"
   },
   {
     "cycle": "15",
     "lts": true,
     "releaseDate": "2024-10-21",
     "eol": "2026-10-21",
-    "latest": "15.5.19",
-    "latestReleaseDate": "2026-06-01"
+    "latest": "15.5.20",
+    "latestReleaseDate": "2026-07-01"
   },
   {
     "cycle": "14",
@@ -95,8 +95,8 @@
     "releaseDate": "2026-03-17",
     "eol": "2028-03-17",
     "supportedPhpVersions": "8.3 - 8.5",
-    "latest": "13.16.1",
-    "latestReleaseDate": "2026-06-16",
+    "latest": "13.18.1",
+    "latestReleaseDate": "2026-07-02",
     "lts": false,
     "support": "2027-09-30"
   },
